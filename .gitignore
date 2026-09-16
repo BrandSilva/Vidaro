@@ -1,0 +1,32 @@
+# ===== Node =====
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ===== Build output =====
+dist/
+.build/
+.cache/
+Installer/
+
+# ===== Bundled binaries (fetched by build/fetch-binaries.js) =====
+bin/
+*.exe
+*.zip
+
+# ===== Runtime / user data =====
+*.partial
+*.part
+*.ytdl
+*.log
+logs/
+cookies*.txt
+.env
+
+# ===== Editor / OS =====
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
