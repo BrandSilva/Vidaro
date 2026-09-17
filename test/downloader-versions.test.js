@@ -2,7 +2,7 @@ const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { parseVersion, compareYtDlpVersions, isNewer, parseUpdateOutput } = require('../src/main/downloader/versions');
+const { parseVersion, compareYtDlpVersions, isNewer, parseUpdateOutput, parseJsRuntimes } = require('../src/main/downloader/versions');
 
 const FIXTURES = path.join(__dirname, 'fixtures', 'downloader');
 
@@ -150,5 +150,36 @@ describe('parseUpdateOutput edge cases', () => {
     });
     assert.equal(parseUpdateOutput(undefined).status, 'failed');
     assert.equal(parseUpdateOutput([null, 5]).status, 'failed');
+  });
+});
+
+describe('parseJsRuntimes', () => {
+  test('reads a working runtime from the debug header', () => {
+    assert.deepEqual(parseJsRuntimes(['[debug] yt-dlp version stable@2026.08.19', '[debug] JS runtimes: node-24.21.0']), [
+      { name: 'node', version: '24.21.0', supported: true }
+    ]);
+  });
+
+  test('a runtime that could not report its version is not supported', () => {
+    assert.deepEqual(parseJsRuntimes('[debug] JS runtimes: node-unknown (unsupported)\n'), [{ name: 'node', version: null, supported: false }]);
+    assert.deepEqual(parseJsRuntimes('[debug] JS runtimes: node-18.20.1 (unsupported)'), [{ name: 'node', version: '18.20.1', supported: false }]);
+  });
+
+  test('lists several runtimes', () => {
+    assert.deepEqual(parseJsRuntimes('[debug] JS runtimes: deno-2.5.1, quickjs-ng-0.10.1'), [
+      { name: 'deno', version: '2.5.1', supported: true },
+      { name: 'quickjs-ng', version: '0.10.1', supported: true }
+    ]);
+  });
+
+  test('no runtime at all', () => {
+    assert.deepEqual(parseJsRuntimes('[debug] JS runtimes: none'), []);
+    assert.deepEqual(parseJsRuntimes('[debug] JS runtimes: none (disabled)'), []);
+  });
+
+  test('output without the header', () => {
+    assert.equal(parseJsRuntimes('yt-dlp.exe: error: You must provide at least one URL.'), null);
+    assert.equal(parseJsRuntimes(undefined), null);
+    assert.equal(parseJsRuntimes([null, 3]), null);
   });
 });

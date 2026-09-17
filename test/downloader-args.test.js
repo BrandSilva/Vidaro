@@ -6,6 +6,7 @@ const {
   infoArgs,
   updateArgs,
   versionArgs,
+  runtimeProbeArgs,
   processEnv,
   expectedExtension,
   sectionDuration,
@@ -471,10 +472,18 @@ describe('infoArgs', () => {
       env.cacheDir,
       '-J',
       '--no-download',
+      '--flat-playlist',
       '--no-playlist',
       '--',
       URL_
     ]);
+  });
+
+  test('single mode stays flat so a playlist link never extracts every video', () => {
+    const args = infoArgs('https://www.youtube.com/playlist?list=PLx', { env });
+    assert.ok(args.includes('--flat-playlist'));
+    assert.ok(args.includes('--no-playlist'));
+    assert.ok(!args.includes('--yes-playlist'));
   });
 
   test('playlist metadata is flat', () => {
@@ -526,8 +535,29 @@ describe('updateArgs and versionArgs', () => {
     for (const channel of ['master', 'yt-dlp/yt-dlp@2020.01.01', '', null]) assert.throws(() => updateArgs(channel), TypeError, String(channel));
   });
 
+  test('pins an exact version to move from nightly back to stable', () => {
+    assert.equal(valueOf(updateArgs('stable', { tag: '2026.08.19' }), '--update-to'), 'stable@2026.08.19');
+    assert.equal(valueOf(updateArgs('nightly', { tag: '2026.08.30.232658' }), '--update-to'), 'nightly@2026.08.30.232658');
+    assert.equal(valueOf(updateArgs('stable', { tag: null }), '--update-to'), 'stable@latest');
+  });
+
+  test('rejects tags that are not versions', () => {
+    for (const tag of ['latest', '2026.8.19', '2026.08.19;x', ' 2026.08.19', 'yt-dlp/yt-dlp@2026.08.19', 20260819, '']) {
+      assert.throws(() => updateArgs('stable', { tag }), TypeError, String(tag));
+    }
+  });
+
   test('version check', () => {
     assert.deepEqual(versionArgs(), ['--ignore-config', '--no-plugin-dirs', '--version']);
+  });
+
+  test('runtime probe prints the debug header with the chosen runtime', () => {
+    const args = runtimeProbeArgs(env);
+    assert.equal(args[0], '-v');
+    assert.equal(valueOf(args, '--js-runtimes'), `node:${ELECTRON}`);
+    assert.ok(args.includes('--ignore-config'));
+    assert.ok(!args.includes('--'));
+    assert.deepEqual(runtimeProbeArgs().slice(0, 2), ['-v', '--ignore-config']);
   });
 });
 

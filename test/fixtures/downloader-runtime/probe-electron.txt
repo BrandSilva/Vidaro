@@ -1,0 +1,16 @@
+[debug] Command-line config: ['-v', '--ignore-config', '--no-plugin-dirs', '--color', 'never', '--encoding', 'utf-8', '--no-js-runtimes', '--js-runtimes', 'node:C:/Program Files/Vidaro/Vidaro.exe', '--no-cache-dir']
+[debug] Encodings: locale cp1252, fs utf-8, pref utf-8, out cp1252 (No ANSI), error cp1252 (No ANSI), screen cp1252 (No ANSI)
+[debug] yt-dlp version stable@2026.08.19 from yt-dlp/yt-dlp [594bd50c2] (win_exe)
+[debug] Python 3.10.11 (CPython AMD64 64bit) - Windows-10-10.0.26200-SP0 (OpenSSL 1.1.1t  7 Feb 2023)
+[debug] exe versions: ffmpeg 9.0.1-essentials_build-www.gyan.dev (setts), ffprobe 9.0.1-essentials_build-www.gyan.dev
+[debug] Optional libraries: Cryptodome-3.23.0, brotli-1.2.0, certifi-2026.07.22, curl_cffi-0.16.0, mutagen-1.48.1, requests-2.34.2, sqlite3-3.40.1, urllib3-2.7.0, websockets-16.1.1, yt_dlp_ejs-0.8.0
+[debug] JS runtimes: node-24.21.0
+[debug] Proxy map: {}
+[debug] Request Handlers: urllib, requests, websockets, curl_cffi
+[debug] Plugin directories: none (disabled)
+[debug] Loaded 1744 extractors
+
+Usage: yt-dlp.exe [OPTIONS] URL [URL...]
+
+yt-dlp.exe: error: You must provide at least one URL.
+Type yt-dlp --help to see a list of all options.

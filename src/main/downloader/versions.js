@@ -60,4 +60,24 @@ function parseUpdateOutput(output, { exitCode = null } = {}) {
   };
 }
 
-module.exports = { parseVersion, compareYtDlpVersions, isNewer, parseUpdateOutput, CHANNELS };
+const RUNTIME_LINE = '[debug] JS runtimes:';
+const RUNTIME_ITEM = /^([a-z][\w-]*?)-(\d[\w.+-]*|unknown)(?:\s+\(([^)]*)\))?$/i;
+
+function parseJsRuntimes(output) {
+  const lines = Array.isArray(output) ? output : String(output ?? '').split(/\r?\n/);
+  const line = lines.find((item) => typeof item === 'string' && item.trim().startsWith(RUNTIME_LINE));
+  if (!line) return null;
+  const list = line.trim().slice(RUNTIME_LINE.length).trim();
+  if (!list || /^none\b/i.test(list)) return [];
+  const result = [];
+  for (const item of list.split(/,\s*/)) {
+    const match = RUNTIME_ITEM.exec(item.trim());
+    if (!match) continue;
+    const version = match[2].toLowerCase() === 'unknown' ? null : match[2];
+    const unsupported = /unsupported|disabled/i.test(match[3] ?? '');
+    result.push({ name: match[1].toLowerCase(), version, supported: version !== null && !unsupported });
+  }
+  return result;
+}
+
+module.exports = { parseVersion, compareYtDlpVersions, isNewer, parseUpdateOutput, parseJsRuntimes, CHANNELS };

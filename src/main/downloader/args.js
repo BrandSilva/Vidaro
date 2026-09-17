@@ -17,6 +17,7 @@ const SPONSORBLOCK_CATEGORIES = 'sponsor,selfpromo,interaction';
 const MAX_URL_LENGTH = 8192;
 const MAX_FRAGMENTS = 16;
 const TEMP_NAME_EXTRA = 48;
+const VERSION_TAG = /^\d{4}\.\d{2}\.\d{2}(?:\.\d{1,6})?$/;
 
 const COMPATIBLE_SORT = ['vcodec:h264', 'lang', 'quality', 'res', 'fps', 'hdr:12', 'acodec:aac'];
 
@@ -278,7 +279,7 @@ function buildDownloadArgs(spec, env) {
 function infoArgs(url, { playlist = false, env = {}, options = {}, maxEntries = null } = {}) {
   const link = webUrl(url);
   const args = [...baseArgs(env), '-J', '--no-download'];
-  args.push(...(playlist ? ['--flat-playlist', '--yes-playlist'] : ['--no-playlist']));
+  args.push('--flat-playlist', playlist ? '--yes-playlist' : '--no-playlist');
   if (maxEntries !== null) {
     if (!Number.isInteger(maxEntries) || maxEntries < 1) fail('Entry limit is invalid');
     args.push('-I', `1:${maxEntries}`);
@@ -288,9 +289,14 @@ function infoArgs(url, { playlist = false, env = {}, options = {}, maxEntries = 
   return args;
 }
 
-function updateArgs(channel = 'stable') {
+function updateArgs(channel = 'stable', { tag = null } = {}) {
   oneOf(channel, CHANNELS, 'Update channel');
-  return ['--ignore-config', '--no-plugin-dirs', '--color', 'never', '--encoding', 'utf-8', '--update-to', `${channel}@latest`];
+  if (tag !== null && (typeof tag !== 'string' || !VERSION_TAG.test(tag))) fail('Update version is invalid');
+  return ['--ignore-config', '--no-plugin-dirs', '--color', 'never', '--encoding', 'utf-8', '--update-to', `${channel}@${tag ?? 'latest'}`];
+}
+
+function runtimeProbeArgs(env = {}) {
+  return ['-v', ...baseArgs(env)];
 }
 
 function versionArgs() {
@@ -333,6 +339,7 @@ module.exports = {
   infoArgs,
   updateArgs,
   versionArgs,
+  runtimeProbeArgs,
   processEnv,
   expectedExtension,
   sectionDuration,
