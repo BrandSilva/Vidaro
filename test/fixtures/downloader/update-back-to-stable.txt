@@ -1,0 +1,5 @@
+Current version: nightly@2026.08.30.232658 from yt-dlp/yt-dlp-nightly-builds
+Latest version: stable@2026.08.19 from yt-dlp/yt-dlp
+Current Build Hash: a3a504c66e91f6474cef0be83b16aedfb7b42b9400a962242d0d433e98f67a70
+Updating to stable@2026.08.19 from yt-dlp/yt-dlp ...
+Updated yt-dlp to stable@2026.08.19 from yt-dlp/yt-dlp

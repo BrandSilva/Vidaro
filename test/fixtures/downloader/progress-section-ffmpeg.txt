@@ -1,0 +1,73 @@
+VIDARO-PARTS {"format":"134+140","protocol":"https+https","ext":"mp4","parts":[{"format_id": "134", "vcodec": "avc1.4d401e", "acodec": "none", "filesize": 18294110, "filesize_approx": 18294061, "protocol": "https"}, {"format_id": "140", "vcodec": "none", "acodec": "mp4a.40.2", "filesize": 10271496, "filesize_approx": 10271468, "protocol": "https"}]}
+VIDARO-PP {"status":"started","pp":"ThumbnailsConvertor"}
+VIDARO-PP {"status":"finished","pp":"ThumbnailsConvertor"}
+frame=0
+fps=0.00
+stream_0_0_q=0.0
+bitrate=   2.8kbits/s
+total_size=48
+out_time_us=139320
+out_time_ms=139320
+out_time=00:00:00.139320
+dup_frames=0
+drop_frames=0
+speed=0.0451x
+progress=continue
+frame=0
+fps=0.00
+stream_0_0_q=0.0
+bitrate=   2.8kbits/s
+total_size=48
+out_time_us=139320
+out_time_ms=139320
+out_time=00:00:00.139320
+dup_frames=0
+drop_frames=0
+speed=0.0385x
+progress=continue
+frame=55
+fps=13.27
+stream_0_0_q=29.0
+bitrate=   0.2kbits/s
+total_size=48
+out_time_us=1857596
+out_time_ms=1857596
+out_time=00:00:01.857596
+dup_frames=0
+drop_frames=0
+speed=0.448x
+progress=continue
+frame=94
+fps=20.15
+stream_0_0_q=29.0
+bitrate=   0.1kbits/s
+total_size=48
+out_time_us=3320454
+out_time_ms=3320454
+out_time=00:00:03.320454
+dup_frames=0
+drop_frames=0
+speed=0.712x
+progress=continue
+frame=150
+fps=29.73
+stream_0_0_q=-1.0
+bitrate= 484.0kbits/s
+total_size=302497
+out_time_us=5000000
+out_time_ms=5000000
+out_time=00:00:05.000000
+dup_frames=0
+drop_frames=0
+speed=0.991x
+progress=end
+VIDARO-DL {"status":"finished","downloaded":302497,"total":302497,"estimate":null,"speed":47257.11374318509,"eta":null,"frag":null,"frags":null,"format":"134+140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\default#E2E BBB section.mp4"}
+VIDARO-PP {"status":"started","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"finished","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"started","pp":"Metadata"}
+VIDARO-PP {"status":"finished","pp":"Metadata"}
+VIDARO-PP {"status":"started","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"finished","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"started","pp":"MoveFiles"}
+VIDARO-PP {"status":"finished","pp":"MoveFiles"}
+VIDARO-FILE "C:\\Users\\User\\Videos\\Vidaro\\default#E2E BBB section.mp4"

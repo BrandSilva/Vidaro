@@ -1,0 +1,27 @@
+VIDARO-PP {"status":"started","pp":"SponsorBlock"}
+VIDARO-PP {"status":"finished","pp":"SponsorBlock"}
+VIDARO-PARTS {"format":"134+140","protocol":"https+https","ext":"mp4","parts":[{"format_id": "134", "vcodec": "avc1.4d401e", "acodec": "none", "filesize": 4703382, "filesize_approx": 4703369, "protocol": "https"}, {"format_id": "140", "vcodec": "none", "acodec": "mp4a.40.2", "filesize": 1776735, "filesize_approx": 1776724, "protocol": "https"}]}
+VIDARO-DL {"status":"downloading","downloaded":1024,"total":null,"estimate":null,"speed":null,"eta":null,"frag":null,"frags":null,"format":null,"file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j3\\2026-07-14 - Blender 5.2 LTS - Showcase Reel.en.vtt"}
+VIDARO-DL {"status":"finished","downloaded":11418,"total":11418,"estimate":null,"speed":56932.124571587534,"eta":null,"frag":null,"frags":null,"format":null,"file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j3\\2026-07-14 - Blender 5.2 LTS - Showcase Reel.en.vtt"}
+VIDARO-PP {"status":"started","pp":"ThumbnailsConvertor"}
+VIDARO-PP {"status":"finished","pp":"ThumbnailsConvertor"}
+VIDARO-DL {"status":"downloading","downloaded":1024,"total":4703382,"estimate":null,"speed":511610.16033353185,"eta":9,"frag":null,"frags":null,"format":"134","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j3\\2026-07-14 - Blender 5.2 LTS - Showcase Reel.f134.mp4"}
+VIDARO-DL {"status":"downloading","downloaded":523264,"total":4703382,"estimate":null,"speed":2322980.0148773803,"eta":1,"frag":null,"frags":null,"format":"134","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j3\\2026-07-14 - Blender 5.2 LTS - Showcase Reel.f134.mp4"}
+VIDARO-DL {"status":"finished","downloaded":4703382,"total":4703382,"estimate":null,"speed":6285430.334770283,"eta":null,"frag":null,"frags":null,"format":"134","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j3\\2026-07-14 - Blender 5.2 LTS - Showcase Reel.f134.mp4"}
+VIDARO-DL {"status":"downloading","downloaded":1024,"total":1776735,"estimate":null,"speed":null,"eta":null,"frag":null,"frags":null,"format":"140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j3\\2026-07-14 - Blender 5.2 LTS - Showcase Reel.f140.m4a"}
+VIDARO-DL {"status":"finished","downloaded":1776735,"total":1776735,"estimate":null,"speed":6436544.379757987,"eta":null,"frag":null,"frags":null,"format":"140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j3\\2026-07-14 - Blender 5.2 LTS - Showcase Reel.f140.m4a"}
+VIDARO-PP {"status":"started","pp":"Merger"}
+VIDARO-PP {"status":"finished","pp":"Merger"}
+VIDARO-PP {"status":"started","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"finished","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"started","pp":"EmbedSubtitle"}
+VIDARO-PP {"status":"finished","pp":"EmbedSubtitle"}
+VIDARO-PP {"status":"started","pp":"ModifyChapters"}
+VIDARO-PP {"status":"finished","pp":"ModifyChapters"}
+VIDARO-PP {"status":"started","pp":"Metadata"}
+VIDARO-PP {"status":"finished","pp":"Metadata"}
+VIDARO-PP {"status":"started","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"finished","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"started","pp":"MoveFiles"}
+VIDARO-PP {"status":"finished","pp":"MoveFiles"}
+VIDARO-FILE "C:\\Users\\User\\Videos\\Vidaro\\2026-07-14 - Blender 5.2 LTS - Showcase Reel.mp4"

@@ -1,0 +1,2 @@
+VIDARO-PARTS {"format":"134+140","protocol":"https+https","ext":"mp4","duration":49,"sectionStart":null,"sectionEnd":null,"parts":[{"format_id": "134", "vcodec": "avc1.4d401e", "acodec": "none", "filesize": 922545, "filesize_approx": 922539, "protocol": "https"}, {"format_id": "140", "vcodec": "none", "acodec": "mp4a.40.2", "filesize": 800267, "filesize_approx": 800264, "protocol": "https"}]}
+ERROR: You have requested merging of multiple formats but ffmpeg is not installed. Aborting due to --abort-on-error

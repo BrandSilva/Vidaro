@@ -1,0 +1,4 @@
+WARNING: skipping cookie file entry due to invalid length 1: 'this is not a cookies file\n'
+ERROR: 'C:\\Users\\User\\Documents\\cookies.txt' does not look like a Netscape format cookies file
+WARNING: skipping cookie file entry due to invalid length 1: 'this is not a cookies file\n'
+ERROR: 'C:\\Users\\User\\Documents\\cookies.txt' does not look like a Netscape format cookies file

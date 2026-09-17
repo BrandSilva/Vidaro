@@ -1,0 +1,12 @@
+VIDARO-PARTS {"format":"233","protocol":"m3u8_native","ext":"mp4","parts":[]}
+VIDARO-DL {"status":"downloading","downloaded":1024,"total":null,"estimate":1024,"speed":457.14285714253054,"eta":null,"frag":0,"frags":22,"format":"233","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E hls audio.mp4"}
+VIDARO-DL {"status":"downloading","downloaded":3072,"total":null,"estimate":22528.0,"speed":457.14285714253054,"eta":null,"frag":0,"frags":22,"format":"233","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E hls audio.mp4"}
+VIDARO-DL {"status":"downloading","downloaded":243113,"total":null,"estimate":661573.0,"speed":77061.56728768727,"eta":null,"frag":7,"frags":22,"format":"233","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E hls audio.mp4"}
+VIDARO-DL {"status":"finished","downloaded":676286,"total":676286,"estimate":null,"speed":505549.1052201208,"eta":null,"frag":null,"frags":null,"format":"233","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E hls audio.mp4"}
+VIDARO-PP {"status":"started","pp":"FixupM3u8"}
+VIDARO-PP {"status":"finished","pp":"FixupM3u8"}
+VIDARO-PP {"status":"started","pp":"ExtractAudio"}
+VIDARO-PP {"status":"finished","pp":"ExtractAudio"}
+VIDARO-PP {"status":"started","pp":"MoveFiles"}
+VIDARO-PP {"status":"finished","pp":"MoveFiles"}
+VIDARO-FILE "C:\\Users\\User\\Videos\\Vidaro\\E2E hls audio.m4a"

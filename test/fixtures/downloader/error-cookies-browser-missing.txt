@@ -1,0 +1,1 @@
+ERROR: could not find vivaldi cookies database in "C:\Users\User\AppData\Local\Vivaldi\User Data"

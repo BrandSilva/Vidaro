@@ -1,0 +1,18 @@
+VIDARO-PARTS {"format":"134+140","protocol":"https+https","ext":"mp4","parts":[{"format_id": "134", "vcodec": "avc1.4d401e", "acodec": "none", "filesize": 18294110, "filesize_approx": 18294061, "protocol": "https"}, {"format_id": "140", "vcodec": "none", "acodec": "mp4a.40.2", "filesize": 10271496, "filesize_approx": 10271468, "protocol": "https"}]}
+frame=60
+fps=0.00
+stream_0_0_q=-1.0
+bitrate= 478.2kbits/s
+total_size=119547
+out_time_us=2000000
+out_time_ms=2000000
+out_time=00:00:02.000000
+dup_frames=0
+drop_frames=0
+speed=9.92x
+progress=end
+VIDARO-DL {"status":"finished","downloaded":119547,"total":119547,"estimate":null,"speed":112837.42611472809,"eta":null,"frag":null,"frags":null,"format":"134+140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\Denied test.mp4"}
+VIDARO-PP {"status":"started","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"finished","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"started","pp":"MoveFiles"}
+ERROR: [Errno 13] Permission denied: 'C:\\Users\\User\\Videos\\Locked\\Denied test.mp4'

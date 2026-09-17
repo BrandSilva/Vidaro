@@ -1,0 +1,43 @@
+VIDARO-PARTS {"format":"134+140","protocol":"https+https","ext":"mp4","duration":635,"sectionStart":10,"sectionEnd":12,"parts":[{"format_id": "134", "vcodec": "avc1.4d401e", "acodec": "none", "filesize": 18294110, "filesize_approx": 18294061, "protocol": "https"}, {"format_id": "140", "vcodec": "none", "acodec": "mp4a.40.2", "filesize": 10271496, "filesize_approx": 10271468, "protocol": "https"}]}
+frame=0
+fps=0.00
+stream_0_0_q=0.0
+bitrate=   2.8kbits/s
+total_size=48
+out_time_us=139320
+out_time_ms=139320
+out_time=00:00:00.139320
+dup_frames=0
+drop_frames=0
+speed=0.136x
+progress=continue
+frame=5
+fps=3.24
+stream_0_0_q=29.0
+bitrate=   1.1kbits/s
+total_size=48
+out_time_us=348299
+out_time_ms=348299
+out_time=00:00:00.348299
+dup_frames=0
+drop_frames=0
+speed=0.226x
+progress=continue
+frame=60
+fps=31.62
+stream_0_0_q=-1.0
+bitrate= 613.1kbits/s
+total_size=153268
+out_time_us=2000000
+out_time_ms=2000000
+out_time=00:00:02.000000
+dup_frames=0
+drop_frames=0
+speed=1.05x
+progress=end
+VIDARO-DL {"status":"finished","downloaded":153268,"total":153268,"estimate":null,"speed":55000.56856695712,"eta":null,"frag":null,"frags":null,"format":"134+140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j2\\E2E BBB range.mp4"}
+VIDARO-PP {"status":"started","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"finished","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"started","pp":"MoveFiles"}
+VIDARO-PP {"status":"finished","pp":"MoveFiles"}
+VIDARO-FILE "C:\\Users\\User\\Videos\\Vidaro\\E2E BBB range.mp4"

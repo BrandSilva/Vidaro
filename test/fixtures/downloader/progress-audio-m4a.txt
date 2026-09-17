@@ -1,0 +1,17 @@
+VIDARO-PARTS {"format":"140","protocol":"https","ext":"m4a","parts":[]}
+VIDARO-PP {"status":"started","pp":"ThumbnailsConvertor"}
+VIDARO-PP {"status":"finished","pp":"ThumbnailsConvertor"}
+VIDARO-DL {"status":"downloading","downloaded":1024,"total":1776735,"estimate":null,"speed":341303.82199618564,"eta":5,"frag":null,"frags":null,"format":"140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\default#E2E reel audio.m4a"}
+VIDARO-DL {"status":"downloading","downloaded":1047552,"total":1776735,"estimate":null,"speed":3455940.592693505,"eta":0,"frag":null,"frags":null,"format":"140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\default#E2E reel audio.m4a"}
+VIDARO-DL {"status":"finished","downloaded":1776735,"total":1776735,"estimate":null,"speed":2930719.7278565913,"eta":null,"frag":null,"frags":null,"format":"140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\default#E2E reel audio.m4a"}
+VIDARO-PP {"status":"started","pp":"FixupM4a"}
+VIDARO-PP {"status":"finished","pp":"FixupM4a"}
+VIDARO-PP {"status":"started","pp":"ExtractAudio"}
+VIDARO-PP {"status":"finished","pp":"ExtractAudio"}
+VIDARO-PP {"status":"started","pp":"Metadata"}
+VIDARO-PP {"status":"finished","pp":"Metadata"}
+VIDARO-PP {"status":"started","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"finished","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"started","pp":"MoveFiles"}
+VIDARO-PP {"status":"finished","pp":"MoveFiles"}
+VIDARO-FILE "C:\\Users\\User\\Videos\\Vidaro\\default#E2E reel audio.m4a"

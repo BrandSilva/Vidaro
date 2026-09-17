@@ -1,0 +1,51 @@
+VIDARO-PARTS {"format":"396","protocol":"https","ext":"mp4","parts":[]}
+VIDARO-PP {"status":"started","pp":"SubtitlesConvertor"}
+VIDARO-PP {"status":"finished","pp":"SubtitlesConvertor"}
+VIDARO-PP {"status":"started","pp":"ThumbnailsConvertor"}
+VIDARO-PP {"status":"finished","pp":"ThumbnailsConvertor"}
+frame=0
+fps=0.00
+stream_0_0_q=0.0
+bitrate=N/A
+total_size=0
+out_time_us=N/A
+out_time_ms=N/A
+out_time=N/A
+dup_frames=0
+drop_frames=0
+speed=N/A
+progress=continue
+frame=0
+fps=0.00
+stream_0_0_q=0.0
+bitrate=N/A
+total_size=0
+out_time_us=N/A
+out_time_ms=N/A
+out_time=N/A
+dup_frames=0
+drop_frames=0
+speed=N/A
+progress=continue
+frame=60
+fps=12.94
+stream_0_0_q=-1.0
+bitrate= 467.7kbits/s
+total_size=113018
+out_time_us=1933333
+out_time_ms=1933333
+out_time=00:00:01.933333
+dup_frames=0
+drop_frames=0
+speed=0.417x
+progress=end
+VIDARO-DL {"status":"finished","downloaded":113018,"total":113018,"estimate":null,"speed":19947.5309760134,"eta":null,"frag":null,"frags":null,"format":"396","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E BBB video only.mp4"}
+VIDARO-PP {"status":"started","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"finished","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"started","pp":"Metadata"}
+VIDARO-PP {"status":"finished","pp":"Metadata"}
+VIDARO-PP {"status":"started","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"finished","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"started","pp":"MoveFiles"}
+VIDARO-PP {"status":"finished","pp":"MoveFiles"}
+VIDARO-FILE "C:\\Users\\User\\Videos\\Vidaro\\E2E BBB video only.mkv"

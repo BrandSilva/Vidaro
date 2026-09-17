@@ -1,0 +1,21 @@
+VIDARO-PARTS {"format":"134+140","protocol":"https+https","ext":"mp4","parts":[{"format_id": "134", "vcodec": "avc1.4d401e", "acodec": "none", "filesize": 4703382, "filesize_approx": 4703369, "protocol": "https"}, {"format_id": "140", "vcodec": "none", "acodec": "mp4a.40.2", "filesize": 1776735, "filesize_approx": 1776724, "protocol": "https"}]}
+VIDARO-PP {"status":"started","pp":"ThumbnailsConvertor"}
+VIDARO-PP {"status":"finished","pp":"ThumbnailsConvertor"}
+VIDARO-DL {"status":"downloading","downloaded":1024,"total":4703382,"estimate":null,"speed":508882.38104265404,"eta":9,"frag":null,"frags":null,"format":"134","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E\uff1a Reel \u00f1 \ud83c\udfac 100% [two parts].f134.mp4"}
+VIDARO-DL {"status":"downloading","downloaded":523264,"total":4703382,"estimate":null,"speed":2241998.58645277,"eta":1,"frag":null,"frags":null,"format":"134","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E\uff1a Reel \u00f1 \ud83c\udfac 100% [two parts].f134.mp4"}
+VIDARO-DL {"status":"finished","downloaded":4703382,"total":4703382,"estimate":null,"speed":5444896.096253431,"eta":null,"frag":null,"frags":null,"format":"134","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E\uff1a Reel \u00f1 \ud83c\udfac 100% [two parts].f134.mp4"}
+VIDARO-DL {"status":"downloading","downloaded":1024,"total":1776735,"estimate":null,"speed":676479.3346983776,"eta":2,"frag":null,"frags":null,"format":"140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E\uff1a Reel \u00f1 \ud83c\udfac 100% [two parts].f140.m4a"}
+VIDARO-DL {"status":"finished","downloaded":1776735,"total":1776735,"estimate":null,"speed":5804930.588885037,"eta":null,"frag":null,"frags":null,"format":"140","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E\uff1a Reel \u00f1 \ud83c\udfac 100% [two parts].f140.m4a"}
+VIDARO-PP {"status":"started","pp":"Merger"}
+VIDARO-PP {"status":"finished","pp":"Merger"}
+VIDARO-PP {"status":"started","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"finished","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"started","pp":"EmbedSubtitle"}
+VIDARO-PP {"status":"finished","pp":"EmbedSubtitle"}
+VIDARO-PP {"status":"started","pp":"Metadata"}
+VIDARO-PP {"status":"finished","pp":"Metadata"}
+VIDARO-PP {"status":"started","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"finished","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"started","pp":"MoveFiles"}
+VIDARO-PP {"status":"finished","pp":"MoveFiles"}
+VIDARO-FILE "C:\\Users\\User\\Videos\\Vidaro\\E2E\uff1a Reel \u00f1 \ud83c\udfac 100% [two parts].mp4"

@@ -1,0 +1,49 @@
+VIDARO-PARTS {"format":"2","protocol":"https","ext":"mp4","parts":[]}
+VIDARO-PP {"status":"started","pp":"ThumbnailsConvertor"}
+VIDARO-PP {"status":"finished","pp":"ThumbnailsConvertor"}
+frame=3
+fps=1.15
+stream_0_0_q=28.0
+bitrate=   2.8kbits/s
+total_size=48
+out_time_us=139320
+out_time_ms=139320
+out_time=00:00:00.139320
+dup_frames=0
+drop_frames=0
+speed=0.0535x
+progress=continue
+frame=27
+fps=8.67
+stream_0_0_q=28.0
+bitrate=N/A
+total_size=48
+out_time_us=N/A
+out_time_ms=N/A
+out_time=N/A
+dup_frames=0
+drop_frames=0
+speed=N/A
+progress=continue
+frame=72
+fps=20.64
+stream_0_0_q=-1.0
+bitrate= 828.9kbits/s
+total_size=310840
+out_time_us=3000000
+out_time_ms=3000000
+out_time=00:00:03.000000
+dup_frames=0
+drop_frames=0
+speed=0.86x
+progress=end
+VIDARO-DL {"status":"finished","downloaded":310840,"total":310840,"estimate":null,"speed":55464.2234453281,"eta":null,"frag":null,"frags":null,"format":"2","file":"C:\\Users\\User\\AppData\\Local\\Vidaro\\temp\\j1\\E2E archive section.mp4"}
+VIDARO-PP {"status":"started","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"finished","pp":"VideoRemuxer"}
+VIDARO-PP {"status":"started","pp":"Metadata"}
+VIDARO-PP {"status":"finished","pp":"Metadata"}
+VIDARO-PP {"status":"started","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"finished","pp":"EmbedThumbnail"}
+VIDARO-PP {"status":"started","pp":"MoveFiles"}
+VIDARO-PP {"status":"finished","pp":"MoveFiles"}
+VIDARO-FILE "C:\\Users\\User\\Videos\\Vidaro\\E2E archive section.mp4"

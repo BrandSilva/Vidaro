@@ -1,0 +1,2 @@
+VIDARO-PARTS {"format":"134+140","protocol":"https+https","ext":"mp4","duration":635,"sectionStart":10,"sectionEnd":11,"parts":[{"format_id": "134", "vcodec": "avc1.4d401e", "acodec": "none", "filesize": 18294110, "filesize_approx": 18294061, "protocol": "https"}, {"format_id": "140", "vcodec": "none", "acodec": "mp4a.40.2", "filesize": 10271496, "filesize_approx": 10271468, "protocol": "https"}]}
+ERROR: You have requested downloading the video partially, but ffmpeg is not installed. Aborting
