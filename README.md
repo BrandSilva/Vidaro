@@ -10,6 +10,15 @@
 
 Vidaro saves videos and music from links, and turns any media file into one that plays everywhere. Paste a link from YouTube or one of the hundreds of other sites supported by yt-dlp, name the file however you want, and pick the quality. Or drop in an old AVI, a DV tape capture or an NTSC/PAL SD file and get a clean MP4 or MP3.
 
+<p align="center">
+  <img src="brand/screenshots/download.png" width="49%" alt="Downloading a video">
+  <img src="brand/screenshots/convert.png" width="49%" alt="Converting archive files">
+</p>
+<p align="center">
+  <img src="brand/screenshots/playlist.png" width="49%" alt="Choosing videos from a playlist">
+  <img src="brand/screenshots/queue.png" width="49%" alt="The queue">
+</p>
+
 ## Features
 
 ### Downloader
