@@ -1,0 +1,12 @@
+Input #0, mpeg, from 'file:C:\Media\tc_blur.mpg':
+  Stream #0:0[0x1e0]: Video: mpeg2video (Main), yuv420p(tv, top first), 720x480 [SAR 1:1 DAR 3:2], 29.97 fps, 29.97 tbr, 90k tbn, start 0.533367
+[Parsed_idet_0 @ 000001e68f5f2e00] Repeated Fields: Neither:     0 Top:     0 Bottom:     0
+[Parsed_idet_0 @ 000001e68f5f2e00] Single frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+[Parsed_idet_0 @ 000001e68f5f2e00] Multi frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+  Stream #0:0 -> #0:0 (mpeg2video (native) -> wrapped_avframe (native))
+Output #0, null, to 'NUL':
+  Stream #0:0: Video: wrapped_avframe, yuv420p(tv, progressive), 720x480 [SAR 1:1 DAR 3:2], q=2-31, 200 kb/s, 29.97 fps, 29.97 tbn
+[Parsed_idet_0 @ 000001e68fb9d600] Repeated Fields: Neither:   108 Top:    36 Bottom:    36
+[Parsed_idet_0 @ 000001e68fb9d600] Single frame detection: TFF:   144 BFF:     0 Progressive:    36 Undetermined:     0
+[Parsed_idet_0 @ 000001e68fb9d600] Multi frame detection: TFF:   176 BFF:     0 Progressive:     4 Undetermined:     0
+frame=  180 fps=0.0 q=-0.0 Lsize=N/A time=00:00:06.00 bitrate=N/A speed= 179x elapsed=0:00:00.03    

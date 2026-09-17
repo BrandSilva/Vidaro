@@ -1,0 +1,72 @@
+{
+  "streams": [
+    {
+      "index": 0,
+      "codec_name": "dvd_nav_packet",
+      "codec_type": "data",
+      "codec_tag_string": "[0][0][0][0]",
+      "r_frame_rate": "0/0",
+      "avg_frame_rate": "0/0",
+      "start_time": "0.528033",
+      "duration": "6.144800",
+      "disposition": {
+        "default": 0,
+        "forced": 0,
+        "attached_pic": 0
+      }
+    },
+    {
+      "index": 1,
+      "codec_name": "mpeg2video",
+      "profile": "Main",
+      "codec_type": "video",
+      "codec_tag_string": "[0][0][0][0]",
+      "width": 720,
+      "height": 480,
+      "sample_aspect_ratio": "1:1",
+      "display_aspect_ratio": "3:2",
+      "pix_fmt": "yuv420p",
+      "field_order": "progressive",
+      "color_range": "tv",
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "start_time": "0.533367",
+      "duration": "6.139467",
+      "disposition": {
+        "default": 0,
+        "forced": 0,
+        "attached_pic": 0
+      }
+    },
+    {
+      "index": 2,
+      "codec_name": "ac3",
+      "codec_type": "audio",
+      "codec_tag_string": "[0][0][0][0]",
+      "sample_fmt": "fltp",
+      "sample_rate": "48000",
+      "channels": 1,
+      "channel_layout": "mono",
+      "bits_per_sample": 0,
+      "r_frame_rate": "0/0",
+      "avg_frame_rate": "0/0",
+      "start_time": "0.528033",
+      "duration": "5.504000",
+      "bit_rate": "448000",
+      "disposition": {
+        "default": 0,
+        "forced": 0,
+        "attached_pic": 0
+      }
+    }
+  ],
+  "format": {
+    "filename": "C:\\Media\\trunc.mpg",
+    "nb_streams": 3,
+    "format_name": "mpeg",
+    "start_time": "0.528033",
+    "duration": "6.144801",
+    "size": "2000000",
+    "bit_rate": "2603827"
+  }
+}

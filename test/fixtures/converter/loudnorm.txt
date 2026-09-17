@@ -1,0 +1,18 @@
+[in#0/mpeg @ 000002023ba82740] start time for stream 0 is not set in estimate_timings_from_pts
+    Side data:
+      CPB properties: bitrate max/min/avg: 9000000/0/0 buffer size: 1835008 vbv_delay: N/A
+[Parsed_loudnorm_0 @ 000002023da5fe00] 
+{
+	"input_i" : "-41.61",
+	"input_tp" : "-31.04",
+	"input_lra" : "2.80",
+	"input_thresh" : "-53.86",
+	"output_i" : "-22.89",
+	"output_tp" : "-11.73",
+	"output_lra" : "2.80",
+	"output_thresh" : "-35.02",
+	"normalization_type" : "dynamic",
+	"target_offset" : "-0.11"
+}
+[out#0/null @ 000002023bae3980] video:0KiB audio:15000KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+size=N/A time=00:00:20.00 bitrate=N/A speed=29.8x elapsed=0:00:00.67    

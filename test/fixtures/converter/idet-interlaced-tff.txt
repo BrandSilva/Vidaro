@@ -1,0 +1,12 @@
+Input #0, mpeg, from 'file:C:\Media\il_blur.mpg':
+  Stream #0:0[0x1e0]: Video: mpeg2video (Main), yuv420p(tv, top first), 720x480 [SAR 1:1 DAR 3:2], 29.97 fps, 29.97 tbr, 90k tbn, start 0.533367
+[Parsed_idet_0 @ 000002a5f5af9b80] Repeated Fields: Neither:     0 Top:     0 Bottom:     0
+[Parsed_idet_0 @ 000002a5f5af9b80] Single frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+[Parsed_idet_0 @ 000002a5f5af9b80] Multi frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+  Stream #0:0 -> #0:0 (mpeg2video (native) -> wrapped_avframe (native))
+Output #0, null, to 'NUL':
+  Stream #0:0: Video: wrapped_avframe, yuv420p(tv, top coded first (swapped)), 720x480 [SAR 1:1 DAR 3:2], q=2-31, 200 kb/s, 29.97 fps, 29.97 tbn
+[Parsed_idet_0 @ 000002a5f5c5fa00] Repeated Fields: Neither:   180 Top:     0 Bottom:     0
+[Parsed_idet_0 @ 000002a5f5c5fa00] Single frame detection: TFF:   180 BFF:     0 Progressive:     0 Undetermined:     0
+[Parsed_idet_0 @ 000002a5f5c5fa00] Multi frame detection: TFF:   180 BFF:     0 Progressive:     0 Undetermined:     0
+frame=  180 fps=0.0 q=-0.0 Lsize=N/A time=00:00:06.00 bitrate=N/A speed= 108x elapsed=0:00:00.05    

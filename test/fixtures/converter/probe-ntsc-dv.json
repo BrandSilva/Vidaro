@@ -1,0 +1,55 @@
+{
+  "streams": [
+    {
+      "index": 0,
+      "codec_name": "dvvideo",
+      "codec_type": "video",
+      "codec_tag_string": "[0][0][0][0]",
+      "width": 720,
+      "height": 480,
+      "sample_aspect_ratio": "8:9",
+      "display_aspect_ratio": "4:3",
+      "pix_fmt": "yuv411p",
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "60000/1",
+      "start_time": "0.000000",
+      "duration": "2.969633",
+      "bit_rate": "28771229",
+      "disposition": {
+        "default": 0,
+        "forced": 0,
+        "attached_pic": 0
+      }
+    },
+    {
+      "index": 1,
+      "codec_name": "pcm_s16le",
+      "codec_type": "audio",
+      "codec_tag_string": "[0][0][0][0]",
+      "sample_fmt": "s16",
+      "sample_rate": "48000",
+      "channels": 2,
+      "channel_layout": "stereo",
+      "bits_per_sample": 16,
+      "r_frame_rate": "0/0",
+      "avg_frame_rate": "0/0",
+      "start_time": "0.000000",
+      "duration": "2.969633",
+      "bit_rate": "1536000",
+      "disposition": {
+        "default": 0,
+        "forced": 0,
+        "attached_pic": 0
+      }
+    }
+  ],
+  "format": {
+    "filename": "C:\\Media\\ntsc.dv",
+    "nb_streams": 2,
+    "format_name": "dv",
+    "start_time": "0.000000",
+    "duration": "2.969633",
+    "size": "10680000",
+    "bit_rate": "28771232"
+  }
+}

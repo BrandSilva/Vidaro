@@ -1,0 +1,12 @@
+Input #0, dv, from 'file:C:\Media\il_bff.dv':
+  Stream #0:0: Video: dvvideo, yuv411p, 720x480 [SAR 8:9 DAR 4:3], 28771 kb/s, 60k fps, 29.97 tbr, 60k tbn
+[Parsed_idet_0 @ 000001b616ddf780] Repeated Fields: Neither:     0 Top:     0 Bottom:     0
+[Parsed_idet_0 @ 000001b616ddf780] Single frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+[Parsed_idet_0 @ 000001b616ddf780] Multi frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+  Stream #0:0 -> #0:0 (dvvideo (native) -> wrapped_avframe (native))
+Output #0, null, to 'NUL':
+  Stream #0:0: Video: wrapped_avframe, yuv411p(bottom coded first (swapped)), 720x480 [SAR 8:9 DAR 4:3], q=2-31, 200 kb/s, 29.97 fps, 29.97 tbn
+[Parsed_idet_0 @ 000001b6188ef900] Repeated Fields: Neither:   180 Top:     0 Bottom:     0
+[Parsed_idet_0 @ 000001b6188ef900] Single frame detection: TFF:     0 BFF:   180 Progressive:     0 Undetermined:     0
+[Parsed_idet_0 @ 000001b6188ef900] Multi frame detection: TFF:     0 BFF:   180 Progressive:     0 Undetermined:     0
+frame=  180 fps=0.0 q=-0.0 Lsize=N/A time=00:00:06.00 bitrate=N/A speed=91.9x elapsed=0:00:00.06    

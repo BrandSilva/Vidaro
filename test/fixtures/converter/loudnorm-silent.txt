@@ -1,0 +1,15 @@
+[Parsed_loudnorm_0 @ 0000013a5c965dc0] 
+{
+	"input_i" : "-inf",
+	"input_tp" : "-inf",
+	"input_lra" : "0.00",
+	"input_thresh" : "-70.00",
+	"output_i" : "-inf",
+	"output_tp" : "-inf",
+	"output_lra" : "0.00",
+	"output_thresh" : "-70.00",
+	"normalization_type" : "dynamic",
+	"target_offset" : "inf"
+}
+[out#0/null @ 0000013a5c944e40] video:0KiB audio:3000KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+size=N/A time=00:00:04.00 bitrate=N/A speed=18.1x elapsed=0:00:00.22    

@@ -1,0 +1,67 @@
+{
+  "streams": [
+    {
+      "index": 0,
+      "codec_name": "h264",
+      "profile": "Constrained Baseline",
+      "codec_type": "video",
+      "codec_tag_string": "avc1",
+      "width": 1920,
+      "height": 1080,
+      "sample_aspect_ratio": "1:1",
+      "display_aspect_ratio": "16:9",
+      "pix_fmt": "yuv420p",
+      "field_order": "progressive",
+      "r_frame_rate": "60000/1001",
+      "avg_frame_rate": "60000/1001",
+      "start_time": "0.000000",
+      "duration": "3.003000",
+      "bit_rate": "27768719",
+      "bits_per_raw_sample": "8",
+      "nb_frames": "180",
+      "disposition": {
+        "default": 1,
+        "forced": 0,
+        "attached_pic": 0
+      },
+      "tags": {
+        "language": "und"
+      }
+    },
+    {
+      "index": 1,
+      "codec_name": "aac",
+      "profile": "LC",
+      "codec_type": "audio",
+      "codec_tag_string": "mp4a",
+      "sample_fmt": "fltp",
+      "sample_rate": "48000",
+      "channels": 1,
+      "channel_layout": "mono",
+      "bits_per_sample": 0,
+      "r_frame_rate": "0/0",
+      "avg_frame_rate": "0/0",
+      "start_time": "0.000000",
+      "duration": "3.000000",
+      "bit_rate": "69704",
+      "nb_frames": "142",
+      "disposition": {
+        "default": 1,
+        "forced": 0,
+        "attached_pic": 0
+      },
+      "tags": {
+        "language": "und"
+      }
+    }
+  ],
+  "format": {
+    "filename": "C:\\Media\\hd5994.mp4",
+    "nb_streams": 2,
+    "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+    "start_time": "0.000000",
+    "duration": "3.003000",
+    "size": "10454763",
+    "bit_rate": "27851516"
+  }
+}

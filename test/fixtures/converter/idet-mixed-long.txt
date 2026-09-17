@@ -1,0 +1,14 @@
+Input #0, mpeg, from 'file:C:\Media\long.mpg':
+  Stream #0:0[0x1bf]: Data: dvd_nav_packet, start 0.528033
+  Stream #0:1[0x1e0]: Video: mpeg2video (Main), yuv420p(tv, progressive), 720x480 [SAR 1:1 DAR 3:2], 29.97 fps, 29.97 tbr, 90k tbn, start 0.533367
+  Stream #0:2[0x80]: Audio: ac3, 48000 Hz, mono, fltp, 448 kb/s, start 0.528033
+[Parsed_idet_0 @ 0000025c024ac200] Repeated Fields: Neither:     0 Top:     0 Bottom:     0
+[Parsed_idet_0 @ 0000025c024ac200] Single frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+[Parsed_idet_0 @ 0000025c024ac200] Multi frame detection: TFF:     0 BFF:     0 Progressive:     0 Undetermined:     0
+  Stream #0:1 -> #0:0 (mpeg2video (native) -> wrapped_avframe (native))
+Output #0, null, to 'NUL':
+  Stream #0:0: Video: wrapped_avframe, yuv420p(tv, top coded first (swapped)), 720x480 [SAR 1:1 DAR 3:2], q=2-31, 200 kb/s, 29.97 fps, 29.97 tbn
+[Parsed_idet_0 @ 0000025c042e4ec0] Repeated Fields: Neither:   599 Top:     0 Bottom:     0
+[Parsed_idet_0 @ 0000025c042e4ec0] Single frame detection: TFF:   238 BFF:   242 Progressive:   119 Undetermined:     0
+[Parsed_idet_0 @ 0000025c042e4ec0] Multi frame detection: TFF:   241 BFF:   242 Progressive:   116 Undetermined:     0
+frame=  599 fps=0.0 q=-0.0 Lsize=N/A time=00:00:19.98 bitrate=N/A speed= 161x elapsed=0:00:00.12    
