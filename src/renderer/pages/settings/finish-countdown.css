@@ -1,0 +1,81 @@
+.finish-countdown {
+  position: fixed;
+  right: 16px;
+  bottom: calc(var(--status-height) + 12px);
+  z-index: 700;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  padding: 12px 12px 12px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--stroke-strong);
+  background: var(--layer-2);
+  box-shadow: var(--shadow-2);
+  animation: finish-countdown-in 180ms var(--ease);
+}
+
+@keyframes finish-countdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.finish-countdown-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.finish-countdown-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: var(--radius);
+  background: var(--layer-3);
+  color: var(--accent-strong);
+}
+
+.finish-countdown-icon.is-shutdown {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.finish-countdown-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.finish-countdown-title {
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.finish-countdown-hint {
+  color: var(--text-3);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.finish-countdown-action {
+  display: flex;
+  flex: none;
+}
+
+.finish-countdown-action .btn {
+  min-width: 76px;
+}
+
+.finish-countdown-bar {
+  margin-top: 10px;
+}
+
+.finish-countdown-bar .progress-fill {
+  transition: width 1s linear;
+}
