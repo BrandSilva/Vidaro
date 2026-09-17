@@ -2,6 +2,7 @@ const path = require('node:path');
 const { BrowserWindow, screen, shell, app } = require('electron');
 const paths = require('./paths');
 const { JsonStore } = require('./store');
+const { trayIconPath } = require('./tray');
 
 const MIN_WIDTH = 880;
 const MIN_HEIGHT = 560;
@@ -96,7 +97,7 @@ function createMainWindow() {
     show: false,
     title: 'Vidaro',
     backgroundColor: BACKGROUND,
-    icon: app.isPackaged ? undefined : path.join(app.getAppPath(), 'build', 'icon.ico'),
+    icon: trayIconPath(),
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: BACKGROUND, symbolColor: '#A3A5B8', height: 40 },
     webPreferences: {

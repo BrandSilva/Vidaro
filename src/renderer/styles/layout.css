@@ -105,7 +105,7 @@
   bottom: 9px;
   width: 3px;
   border-radius: 0 3px 3px 0;
-  background: var(--accent-gradient);
+  background: var(--accent);
 }
 
 .rail-item svg {
@@ -282,8 +282,8 @@
 }
 
 .status-dot.is-busy {
-  background: var(--cyan);
-  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2);
 }
 
 .status-spacer {

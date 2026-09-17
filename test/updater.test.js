@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const fsp = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const { AppUpdater, compareVersions, pickRelease } = require('../src/main/updater');
+const { AppUpdater, compareVersions, pickRelease, detectInstallScope, installerArgs } = require('../src/main/updater');
 
 const DOWNLOAD_BASE = 'https://github.com/TridentSky/Vidaro/releases/download';
 
@@ -165,6 +165,24 @@ test('dismiss records the version and hides the current announcement', async (t)
   updater.dismiss('1.4.0');
   assert.deepEqual(dismissedVersions, ['1.4.0']);
   assert.equal(updater.status().dismissed, true);
+});
+
+test('the install scope comes from the installer registry key of this folder', async () => {
+  const registry = (values) => async (hive) => values[hive] ?? null;
+  assert.equal(await detectInstallScope('C:\\Program Files\\Vidaro', registry({ HKLM: 'C:\\Program Files\\Vidaro' })), 'allusers');
+  assert.equal(await detectInstallScope('C:\\Program Files\\Vidaro\\', registry({ HKLM: 'c:\\program files\\vidaro' })), 'allusers');
+  assert.equal(
+    await detectInstallScope('C:\\Users\\Ana\\AppData\\Local\\Programs\\Vidaro', registry({ HKCU: 'C:\\Users\\Ana\\AppData\\Local\\Programs\\Vidaro', HKLM: 'C:\\Program Files\\Vidaro' })),
+    'currentuser'
+  );
+  assert.equal(await detectInstallScope('D:\\Portable\\Vidaro', registry({ HKLM: 'C:\\Program Files\\Vidaro' })), null);
+  assert.equal(await detectInstallScope('D:\\Portable\\Vidaro', registry({})), null);
+});
+
+test('the installer runs in update mode and skips the install mode page when the scope is known', () => {
+  assert.deepEqual(installerArgs('allusers'), ['--updated', '/allusers']);
+  assert.deepEqual(installerArgs('currentuser'), ['--updated', '/currentuser']);
+  assert.deepEqual(installerArgs(null), ['--updated']);
 });
 
 test('dispose stops scheduled checks', async (t) => {

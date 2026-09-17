@@ -60,7 +60,7 @@
   bottom: 9px;
   width: 3px;
   border-radius: 0 3px 3px 0;
-  background: var(--accent-gradient);
+  background: var(--accent);
 }
 
 .st-nav-item.is-active svg {
@@ -274,7 +274,7 @@
   height: var(--control-height-sm);
   padding: 0 10px;
   border-radius: var(--radius-sm);
-  border: 1px dashed rgba(139, 108, 255, 0.85);
+  border: 1px dashed rgba(var(--accent-rgb), 0.85);
   background: var(--accent-soft);
   color: var(--text-1);
   font-size: 12px;
@@ -296,10 +296,10 @@
 @keyframes st-pulse {
   0%,
   100% {
-    border-color: rgba(139, 108, 255, 0.85);
+    border-color: rgba(var(--accent-rgb), 0.85);
   }
   50% {
-    border-color: rgba(34, 211, 238, 0.85);
+    border-color: rgba(var(--accent-rgb), 0.4);
   }
 }
 

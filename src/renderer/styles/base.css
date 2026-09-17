@@ -77,7 +77,7 @@ a:hover {
 }
 
 ::selection {
-  background: rgba(139, 108, 255, 0.45);
+  background: rgba(var(--accent-rgb), 0.45);
   color: #fff;
 }
 

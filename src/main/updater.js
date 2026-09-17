@@ -1,11 +1,42 @@
 const fs = require('node:fs');
 const fsp = require('node:fs/promises');
 const path = require('node:path');
-const { spawn } = require('node:child_process');
+const { spawn, execFile } = require('node:child_process');
 const { EventEmitter } = require('node:events');
 
 function electronFetch(url, init) {
   return require('electron').net.fetch(url, init);
+}
+
+const INSTALL_KEY = 'Software\\b3061e00-41c1-51b8-980d-147b667eecc2';
+const REG = path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'reg.exe');
+
+function readInstallLocation(hive) {
+  return new Promise((resolve) => {
+    execFile(REG, ['query', `${hive}\\${INSTALL_KEY}`, '/v', 'InstallLocation'], { windowsHide: true, timeout: 5000 }, (error, stdout) => {
+      if (error) {
+        resolve(null);
+        return;
+      }
+      const match = /InstallLocation\s+REG_\w+\s+(.+)/.exec(String(stdout));
+      resolve(match ? match[1].trim() : null);
+    });
+  });
+}
+
+function sameFolder(a, b) {
+  if (!a || !b) return false;
+  return path.win32.resolve(a).replace(/\\+$/, '').toLowerCase() === path.win32.resolve(b).replace(/\\+$/, '').toLowerCase();
+}
+
+async function detectInstallScope(appDir, readLocation = readInstallLocation) {
+  if (sameFolder(await readLocation('HKCU'), appDir)) return 'currentuser';
+  if (sameFolder(await readLocation('HKLM'), appDir)) return 'allusers';
+  return null;
+}
+
+function installerArgs(scope) {
+  return scope ? ['--updated', `/${scope}`] : ['--updated'];
 }
 
 const RELEASES_URL = 'https://api.github.com/repos/TridentSky/Vidaro/releases/latest';
@@ -46,7 +77,7 @@ function pickRelease(release, currentVersion) {
 }
 
 class AppUpdater extends EventEmitter {
-  constructor({ currentVersion, updatesDir, getSettings, dismiss, activeJobs, fetchImpl = electronFetch }) {
+  constructor({ currentVersion, updatesDir, getSettings, dismiss, activeJobs, fetchImpl = electronFetch, detectScope = detectInstallScope }) {
     super();
     this.currentVersion = currentVersion;
     this.updatesDir = updatesDir;
@@ -54,6 +85,7 @@ class AppUpdater extends EventEmitter {
     this.dismissVersion = dismiss;
     this.activeJobs = activeJobs;
     this.fetch = fetchImpl;
+    this.detectScope = detectScope;
     this.timer = null;
     this.failures = 0;
     this.release = null;
@@ -201,7 +233,8 @@ class AppUpdater extends EventEmitter {
   async launchInstaller() {
     const release = this.release;
     if (!release || !(await this.isDownloaded(release))) return false;
-    const child = spawn(this.installerPath(release), ['--updated'], { detached: true, stdio: 'ignore', windowsHide: false });
+    const scope = await this.detectScope(path.dirname(process.execPath));
+    const child = spawn(this.installerPath(release), installerArgs(scope), { detached: true, stdio: 'ignore', windowsHide: false });
     child.on('error', () => {});
     child.unref();
     return true;
@@ -236,4 +269,4 @@ class AppUpdater extends EventEmitter {
   }
 }
 
-module.exports = { AppUpdater, compareVersions, pickRelease, parseVersion };
+module.exports = { AppUpdater, compareVersions, pickRelease, parseVersion, detectInstallScope, installerArgs };
