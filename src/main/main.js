@@ -83,9 +83,13 @@ const ctx = {
   handleCloseChoice(choice) {
     if (choice === 'stay') return true;
     if (choice === 'background') {
-      ctx.tray?.show();
-      ctx.tray?.setTooltip(LABELS.background(ctx.activeJobs()));
       ctx.window?.hide();
+      try {
+        ctx.tray?.show();
+        ctx.tray?.setTooltip(LABELS.background(ctx.activeJobs()));
+      } catch {
+        ctx.showWindow();
+      }
       return true;
     }
     ctx.requestQuit(choice === 'cancel' ? 'cancel' : 'pause');
@@ -311,7 +315,9 @@ async function prepareFileSystem() {
 }
 
 function start() {
-  app.setAppUserModelId('com.tridentsky.vidaro');
+  const identity = paths.windowsIdentity();
+  app.setAppUserModelId(identity.appUserModelId);
+  app.setToastActivatorCLSID(identity.toastActivator);
   const initial = parseInputs(process.argv);
   if (initial) ctx.pendingInputs.push(initial);
 

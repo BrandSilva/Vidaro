@@ -13,6 +13,17 @@ function configureDataPaths() {
   app.setPath('userData', path.join(app.getPath('appData'), DEV_DIR));
 }
 
+const IDENTITIES = {
+  release: { appUserModelId: 'com.tridentsky.vidaro', toastActivator: '{F4A7A10D-C880-40B1-85EF-D4E227E7E8E0}' },
+  test: { appUserModelId: 'com.tridentsky.vidaro.test', toastActivator: '{F87D0960-616F-40CD-B971-0F4D52C82E43}' },
+  development: { appUserModelId: 'com.tridentsky.vidaro.dev', toastActivator: '{81032862-A209-4681-AC40-938855294CED}' }
+};
+
+function windowsIdentity() {
+  if (!app.isPackaged) return IDENTITIES.development;
+  return hasCustomProfile() ? IDENTITIES.test : IDENTITIES.release;
+}
+
 function localDataDir() {
   if (hasCustomProfile()) return path.join(app.getPath('userData'), 'Local');
   const base = process.env.LOCALAPPDATA || path.join(app.getPath('home'), 'AppData', 'Local');
@@ -77,6 +88,7 @@ function sweepDirs() {
 
 module.exports = {
   configureDataPaths,
+  windowsIdentity,
   localDataDir,
   bundledBinDir,
   userBinDir,
