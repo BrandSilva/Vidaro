@@ -139,6 +139,10 @@ export const errors = {
       'The connection timed out.': {
         message: 'The connection timed out.',
         hint: NETWORK_HINT
+      },
+      'The site stopped sending the video.': {
+        message: 'The site stopped sending the video.',
+        hint: 'Retry the download. If it keeps failing, update yt-dlp.'
       }
     }
   },

@@ -39,7 +39,11 @@ function installerArgs(scope) {
   return scope ? ['--updated', `/${scope}`] : ['--updated'];
 }
 
-const RELEASES_URL = 'https://api.github.com/repos/TridentSky/Vidaro/releases/latest';
+const REPO_NAME = 'Vidaro';
+const RELEASES_URLS = [
+  'https://api.github.com/repositories/1373692171/releases/latest',
+  'https://api.github.com/repos/BrandSilva/Vidaro/releases/latest'
+];
 const ASSET_NAME = 'Vidaro-Setup.exe';
 const FIRST_CHECK_MS = 20 * 1000;
 const RETRY_DELAYS_MS = [2 * 60 * 1000, 10 * 60 * 1000, 30 * 60 * 1000];
@@ -65,15 +69,29 @@ function compareVersions(a, b) {
   return left.pre > right.pre ? 1 : -1;
 }
 
+function repositoryBase(htmlUrl) {
+  let parsed;
+  try {
+    parsed = new URL(String(htmlUrl || ''));
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== 'https:' || parsed.hostname !== 'github.com') return null;
+  const [owner, repo, section, kind] = parsed.pathname.split('/').filter(Boolean);
+  if (!/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(owner || '') || repo !== REPO_NAME || section !== 'releases' || kind !== 'tag') return null;
+  return `https://github.com/${owner}/${REPO_NAME}/`;
+}
+
 function pickRelease(release, currentVersion) {
   if (!release || release.draft || release.prerelease) return null;
   const version = String(release.tag_name || '').replace(/^v/, '');
   if (!parseVersion(version) || compareVersions(version, currentVersion) <= 0) return null;
   const asset = (release.assets || []).find((item) => item.name === ASSET_NAME);
   if (!asset || !Number.isFinite(asset.size) || asset.size <= 0) return null;
+  const base = repositoryBase(release.html_url);
   const downloadUrl = String(asset.browser_download_url || '');
-  if (!downloadUrl.startsWith('https://github.com/TridentSky/Vidaro/releases/download/')) return null;
-  return { version, size: asset.size, downloadUrl, notesUrl: String(release.html_url || '') };
+  if (!base || !downloadUrl.startsWith(`${base}releases/download/`)) return null;
+  return { version, size: asset.size, downloadUrl, notesUrl: String(release.html_url) };
 }
 
 class AppUpdater extends EventEmitter {
@@ -135,10 +153,7 @@ class AppUpdater extends EventEmitter {
     const previous = this.state.phase;
     this.set({ phase: 'checking', error: null });
     try {
-      const response = await this.fetch(RELEASES_URL, {
-        headers: { Accept: 'application/vnd.github+json', 'User-Agent': `Vidaro/${this.currentVersion}` },
-        signal: AbortSignal.timeout(CHECK_TIMEOUT_MS)
-      });
+      const response = await this.fetchLatest();
       if (!response.ok && response.status !== 404) throw new Error(`HTTP ${response.status}`);
       const release = response.status === 404 ? null : pickRelease(await response.json(), this.currentVersion);
       this.release = release;
@@ -163,6 +178,18 @@ class AppUpdater extends EventEmitter {
       this.set({ phase: previous, error: manual ? 'check-failed' : null });
       return false;
     }
+  }
+
+  async fetchLatest() {
+    let response = null;
+    for (const url of RELEASES_URLS) {
+      response = await this.fetch(url, {
+        headers: { Accept: 'application/vnd.github+json', 'User-Agent': `Vidaro/${this.currentVersion}` },
+        signal: AbortSignal.timeout(CHECK_TIMEOUT_MS)
+      });
+      if (response.status !== 404) return response;
+    }
+    return response;
   }
 
   installerPath(release) {
@@ -269,4 +296,4 @@ class AppUpdater extends EventEmitter {
   }
 }
 
-module.exports = { AppUpdater, compareVersions, pickRelease, parseVersion, detectInstallScope, installerArgs };
+module.exports = { AppUpdater, compareVersions, pickRelease, parseVersion, detectInstallScope, installerArgs, repositoryBase, RELEASES_URLS };

@@ -55,7 +55,7 @@ Vidaro saves videos and music from links, and turns any media file into one that
 
 ## Install
 
-1. Download **Vidaro-Setup.exe** from [Releases](https://github.com/TridentSky/Vidaro/releases/latest)
+1. Download **Vidaro-Setup.exe** from [Releases](https://github.com/BrandSilva/Vidaro/releases/latest)
 2. Run it. Windows may show **"Windows protected your PC"** because the app is not code-signed yet: click **More info**, then **Run anyway**
 3. Choose whether to install Vidaro only for you (no administrator rights needed) or for all users
 
@@ -120,6 +120,10 @@ Vidaro is a tool. Only download content you own, content that is in the public d
 - [FFmpeg](https://ffmpeg.org) — conversion and media analysis ([GPL v3](https://ffmpeg.org/legal.html), Windows build by [gyan.dev](https://www.gyan.dev/ffmpeg/builds/))
 - [Lucide](https://lucide.dev) — icons
 - Developed with [Claude Code](https://claude.com/claude-code)
+
+## Made by TridentSky
+
+Vidaro is made by [TridentSky](https://tridentsky.net/software). Need custom software or a website? [Get in touch](https://tridentsky.net/software).
 
 ## License
 

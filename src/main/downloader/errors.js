@@ -140,16 +140,22 @@ const RULES = [
   },
   {
     code: 'rate-limited',
-    pattern: /HTTP Error 429|Too Many Requests|rate[- ]limit/i,
+    pattern: /HTTP Error 429|Too Many Requests|rate[- ]limit|ffmpeg exited with code (?:3335375624|-959591672)\b/i,
     message: 'The site is limiting requests right now.',
     hint: 'Wait a few minutes and retry. Cookies from a signed-in browser can also help.'
   },
   {
     code: 'http-403',
-    pattern: /HTTP Error 403|403: Forbidden|403 Forbidden/i,
+    pattern: /HTTP Error 403|403: Forbidden|403 Forbidden|ffmpeg exited with code (?:3436169992|-858797304)\b/i,
     message: 'The site refused the download.',
     hint: UPDATE_HINT,
     action: 'update-ytdlp'
+  },
+  {
+    code: 'network',
+    pattern: /ffmpeg exited with code (?:3486501640|-808465656|3469724424|-825242872|3419392776|-875574520|2812791560|-1482175736|2812791304|-1482175992)\b/i,
+    message: 'The site stopped sending the video.',
+    hint: 'Retry the download. If it keeps failing, update yt-dlp.'
   },
   {
     code: 'network',

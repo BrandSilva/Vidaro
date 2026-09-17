@@ -273,6 +273,18 @@ describe('known yt-dlp messages', () => {
 });
 
 describe('context and edge cases', () => {
+  test('ffmpeg HTTP failures during section downloads are not reported as processing errors', () => {
+    assert.equal(codeOf(['ERROR: ffmpeg exited with code 3436169992']), 'http-403');
+    assert.equal(codeOf(['ERROR: ffmpeg exited with code -858797304']), 'http-403');
+    assert.equal(codeOf(['ERROR: ffmpeg exited with code 3335375624']), 'rate-limited');
+    const notFound = mapDownloadError(['ERROR: ffmpeg exited with code 3419392776']);
+    assert.equal(notFound.code, 'network');
+    assert.equal(notFound.message, 'The site stopped sending the video.');
+    assert.equal(codeOf(['ERROR: ffmpeg exited with code 2812791304']), 'network');
+    assert.equal(codeOf(['ERROR: ffmpeg exited with code 1']), 'postprocessing-failed');
+    assert.equal(codeOf(['ERROR: ffmpeg exited with code 34361699920']), 'postprocessing-failed');
+  });
+
   test('an n challenge warning turns a missing format into a challenge failure', () => {
     const result = mapDownloadError([
       'WARNING: [youtube] abcdefghijk: n challenge solving failed: Some formats may be missing. Ensure you have a supported JavaScript runtime and challenge solver script distribution installed.',

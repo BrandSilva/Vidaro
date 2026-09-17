@@ -1,4 +1,4 @@
-import { ExternalLink, Info } from 'lucide-react';
+import { ExternalLink, Globe, Info } from 'lucide-react';
 import logoUrl from '../../../../brand/logo.svg';
 import { Button } from '../../components/Button.jsx';
 import { Badge, Skeleton } from '../../components/Feedback.jsx';
@@ -35,6 +35,9 @@ export function AboutCard({ sectionRef }) {
         </Button>
         <Button variant="secondary" icon={ExternalLink} onClick={() => api.shell.openExternal(LINKS.releases)}>
           {a.releases}
+        </Button>
+        <Button variant="secondary" icon={Globe} onClick={() => api.shell.openExternal(LINKS.website)}>
+          {a.website}
         </Button>
       </div>
       <GroupTitle>{a.thirdParty}</GroupTitle>

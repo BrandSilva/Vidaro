@@ -18,6 +18,25 @@ const SIDECARS = new Set([
 const LEFTOVERS = new Set(['part', 'ytdl', 'tmp', 'temp', 'partial']);
 const MAX_LINES = 200;
 const REMOVE_OPTIONS = { recursive: true, force: true, maxRetries: 6, retryDelay: 200 };
+const TRANSIENT_CODES = new Set(['http-403', 'network']);
+
+function pause(ms, signal) {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(processes.abortError(signal));
+      return;
+    }
+    const onAbort = () => {
+      clearTimeout(timer);
+      reject(processes.abortError(signal));
+    };
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', onAbort);
+      resolve();
+    }, ms);
+    signal?.addEventListener('abort', onAbort, { once: true });
+  });
+}
 
 function isPlainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -131,7 +150,7 @@ function combinePercent(previous, next) {
   return Math.max(previous, next);
 }
 
-function createDownloadRunner({ ytdlp, ffmpegDir, tempDir, cacheDir = null, jsRuntime = null, run = processes.run }) {
+function createDownloadRunner({ ytdlp, ffmpegDir, tempDir, cacheDir = null, jsRuntime = null, run = processes.run, automaticRetries = 1, retryDelayMs = 2500 }) {
   const reserved = new Map();
   const percents = new Map();
   const runtime = jsRuntime ?? ytdlp.jsRuntime ?? null;
@@ -374,14 +393,18 @@ function createDownloadRunner({ ytdlp, ffmpegDir, tempDir, cacheDir = null, jsRu
     if (!isPlainObject(job) || !JOB_ID.test(job.id ?? '') || !isPlainObject(job.spec)) {
       throw new JobError('invalid-options', { message: 'The download options are not valid.', retryable: false });
     }
-    const state = { target: null, parser: null, finalPath: null, done: false };
-    try {
-      return await execute(job, ctx, state);
-    } catch (error) {
-      await afterFailure(job, isAbortError(error) ? ctx.signal?.reason : null, state);
-      throw error;
-    } finally {
-      release(state.target, job.id);
+    for (let attempt = 0; ; attempt += 1) {
+      const state = { target: null, parser: null, finalPath: null, done: false };
+      try {
+        return await execute(job, ctx, state);
+      } catch (error) {
+        const aborted = isAbortError(error);
+        await afterFailure(job, aborted ? ctx.signal?.reason : null, state);
+        if (aborted || attempt >= automaticRetries || !TRANSIENT_CODES.has(error?.code)) throw error;
+      } finally {
+        release(state.target, job.id);
+      }
+      await pause(retryDelayMs, ctx.signal);
     }
   }
 

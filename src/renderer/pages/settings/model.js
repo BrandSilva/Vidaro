@@ -100,8 +100,9 @@ export const SHORTCUT_GROUP_ORDER = ['general', 'download', 'convert', 'queue', 
 export const CODEC_ORDER = ['h264', 'hevc', 'av1', 'vp9'];
 
 export const LINKS = Object.freeze({
-  repository: 'https://github.com/TridentSky/Vidaro',
-  releases: 'https://github.com/TridentSky/Vidaro/releases'
+  repository: 'https://github.com/BrandSilva/Vidaro',
+  releases: 'https://github.com/BrandSilva/Vidaro/releases',
+  website: 'https://tridentsky.net/software'
 });
 
 export function valueAt(data, key) {

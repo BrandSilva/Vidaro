@@ -337,6 +337,7 @@ export const settings = {
     version: (version) => `Version ${version}`,
     repository: 'GitHub repository',
     releases: 'Releases',
+    website: 'Custom software by TridentSky',
     thirdParty: 'Third-party software',
     thirdPartyNote: 'The license texts of yt-dlp and FFmpeg are installed next to their executables.',
     credits: [

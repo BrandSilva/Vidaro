@@ -6,14 +6,14 @@ const os = require('node:os');
 const path = require('node:path');
 const { AppUpdater, compareVersions, pickRelease, detectInstallScope, installerArgs } = require('../src/main/updater');
 
-const DOWNLOAD_BASE = 'https://github.com/TridentSky/Vidaro/releases/download';
+const DOWNLOAD_BASE = 'https://github.com/BrandSilva/Vidaro/releases/download';
 
 function release(version, { size = 1024, draft = false, prerelease = false, assetName = 'Vidaro-Setup.exe', url } = {}) {
   return {
     tag_name: `v${version}`,
     draft,
     prerelease,
-    html_url: `https://github.com/TridentSky/Vidaro/releases/tag/v${version}`,
+    html_url: `https://github.com/BrandSilva/Vidaro/releases/tag/v${version}`,
     assets: [{ name: assetName, size, browser_download_url: url || `${DOWNLOAD_BASE}/v${version}/Vidaro-Setup.exe` }]
   };
 }
@@ -61,6 +61,48 @@ test('pickRelease only accepts newer stable releases with the official installer
   const picked = pickRelease(release('1.1.0', { size: 2048 }), '1.0.0');
   assert.equal(picked.version, '1.1.0');
   assert.equal(picked.size, 2048);
+});
+
+test('releases keep working after the GitHub account is renamed', () => {
+  const renamed = {
+    ...release('1.1.0'),
+    html_url: 'https://github.com/NewOwner/Vidaro/releases/tag/v1.1.0',
+    assets: [{ name: 'Vidaro-Setup.exe', size: 10, browser_download_url: 'https://github.com/NewOwner/Vidaro/releases/download/v1.1.0/Vidaro-Setup.exe' }]
+  };
+  assert.equal(pickRelease(renamed, '1.0.0').downloadUrl, 'https://github.com/NewOwner/Vidaro/releases/download/v1.1.0/Vidaro-Setup.exe');
+  const mismatched = { ...renamed, html_url: 'https://github.com/BrandSilva/Vidaro/releases/tag/v1.1.0' };
+  assert.equal(pickRelease(mismatched, '1.0.0'), null);
+  for (const htmlUrl of [
+    'http://github.com/NewOwner/Vidaro/releases/tag/v1.1.0',
+    'https://github.evil.com/NewOwner/Vidaro/releases/tag/v1.1.0',
+    'https://github.com/NewOwner/Other/releases/tag/v1.1.0',
+    'https://github.com/New_Owner/Vidaro/releases/tag/v1.1.0',
+    'not a url'
+  ]) {
+    assert.equal(pickRelease({ ...renamed, html_url: htmlUrl }, '1.0.0'), null, htmlUrl);
+  }
+});
+
+test('the latest release is looked up by repository id first, then by name', async (t) => {
+  const dir = await tempDir(t);
+  const asked = [];
+  const { updater } = makeUpdater(dir, async (url) => {
+    asked.push(url);
+    return url.includes('/repositories/') ? new Response('{}', { status: 404 }) : jsonResponse(release('1.5.0'));
+  });
+  t.after(() => updater.dispose());
+  assert.equal(await updater.check(), true);
+  assert.deepEqual(asked, ['https://api.github.com/repositories/1373692171/releases/latest', 'https://api.github.com/repos/BrandSilva/Vidaro/releases/latest']);
+  assert.equal(updater.status().version, '1.5.0');
+  asked.length = 0;
+  const { updater: direct } = makeUpdater(dir, async (url) => {
+    asked.push(url);
+    return jsonResponse(release('1.6.0'));
+  });
+  t.after(() => direct.dispose());
+  await direct.check();
+  assert.deepEqual(asked, ['https://api.github.com/repositories/1373692171/releases/latest']);
+  assert.equal(direct.status().version, '1.6.0');
 });
 
 test('a repository without releases counts as up to date', async (t) => {

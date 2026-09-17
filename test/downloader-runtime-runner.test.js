@@ -52,7 +52,16 @@ function fakeYtdlp({ ensureError = null } = {}) {
 function makeRunner(script, options = {}) {
   const fake = fakeRun(script);
   const ytdlp = options.ytdlp ?? fakeYtdlp();
-  const runner = createDownloadRunner({ ytdlp, ffmpegDir: FFMPEG_DIR, tempDir, cacheDir: 'C:\\cache\\yt-dlp', jsRuntime: RUNTIME, run: fake.run });
+  const runner = createDownloadRunner({
+    ytdlp,
+    ffmpegDir: FFMPEG_DIR,
+    tempDir,
+    cacheDir: 'C:\\cache\\yt-dlp',
+    jsRuntime: RUNTIME,
+    run: fake.run,
+    automaticRetries: options.automaticRetries ?? 0,
+    retryDelayMs: options.retryDelayMs ?? 1
+  });
   return { runner, fake, ytdlp };
 }
 
@@ -463,6 +472,44 @@ describe('failures', () => {
   test('HTTP 403 suggests updating yt-dlp', async () => {
     const { runner } = makeRunner(() => ({ code: 1, steps: [{ err: 'ERROR: unable to download video data: HTTP Error 403: Forbidden' }] }));
     await assert.rejects(runner.run(makeJob(), makeCtx()), { code: 'http-403', action: 'update-ytdlp' });
+  });
+
+  test('a momentary YouTube 403 from ffmpeg is retried once automatically', async () => {
+    let calls = 0;
+    const { runner, fake } = makeRunner(
+      () => {
+        calls += 1;
+        return calls === 1 ? { code: 1, steps: [{ err: 'ERROR: ffmpeg exited with code 3436169992' }] } : { steps: simpleSteps() };
+      },
+      { automaticRetries: 1 }
+    );
+    const result = await runner.run(makeJob(), makeCtx());
+    assert.equal(result.path, path.join(folder, 'Clip.mp4'));
+    assert.equal(fake.calls.length, 2);
+  });
+
+  test('a 403 that keeps happening fails after the automatic retry', async () => {
+    const { runner, fake } = makeRunner(() => ({ code: 1, steps: [{ err: 'ERROR: ffmpeg exited with code 3436169992' }] }), { automaticRetries: 1 });
+    await assert.rejects(runner.run(makeJob(), makeCtx()), { code: 'http-403', action: 'update-ytdlp' });
+    assert.equal(fake.calls.length, 2);
+  });
+
+  test('errors that are not transient are never retried automatically', async () => {
+    const { runner, fake } = makeRunner(() => ({ code: 1, steps: replaySteps(fixture('error-age-restricted.txt'), { folder }) }), { automaticRetries: 1 });
+    await assert.rejects(runner.run(makeJob(), makeCtx()), { code: 'age-restricted' });
+    assert.equal(fake.calls.length, 1);
+  });
+
+  test('pausing while waiting to retry stops right away', async () => {
+    const { runner, fake } = makeRunner(() => ({ code: 1, steps: [{ err: 'ERROR: ffmpeg exited with code 3436169992' }] }), {
+      automaticRetries: 1,
+      retryDelayMs: 60000
+    });
+    const ctx = makeCtx();
+    const pending = runner.run(makeJob(), ctx);
+    setTimeout(() => ctx.controller.abort('pause'), 50);
+    await assert.rejects(pending, (error) => error.name === 'AbortError');
+    assert.equal(fake.calls.length, 1);
   });
 
   test('a SponsorBlock outage still delivers the file', async () => {
