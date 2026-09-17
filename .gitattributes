@@ -22,3 +22,6 @@
 *.ico binary
 *.bmp binary
 *.jpg binary
+
+# Test fixtures are byte-exact captures
+test/fixtures/** text eol=lf
