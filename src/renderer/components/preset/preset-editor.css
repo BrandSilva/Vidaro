@@ -1,0 +1,152 @@
+.pe {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  container: pe / inline-size;
+}
+
+.pe .field-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@container pe (max-width: 440px) {
+  .pe .field-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.pe .field-label {
+  min-height: 18px;
+}
+
+.pe .field-hint {
+  line-height: 1.35;
+}
+
+.pe-switch {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 40px;
+  padding: 4px 0;
+  min-width: 0;
+}
+
+.pe-switch-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.pe-switch-label {
+  font-weight: 500;
+  color: var(--text-1);
+}
+
+.pe-switch-hint {
+  color: var(--text-3);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.pe-switch.is-disabled .pe-switch-label {
+  color: var(--text-3);
+}
+
+.pe-note {
+  padding-top: 14px;
+  color: var(--text-3);
+}
+
+.pe-error {
+  margin-top: -8px;
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.pe-static {
+  display: flex;
+  align-items: center;
+  height: var(--control-height);
+  padding: 0 10px;
+  border-radius: var(--radius);
+  border: 1px dashed var(--stroke);
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pe-quality .slider-value,
+.pe-volume .slider-value {
+  min-width: 104px;
+  text-align: right;
+}
+
+.pe-volume .slider-value {
+  min-width: 64px;
+}
+
+.pe-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--control-height);
+}
+
+.pe-crop {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@container pe (max-width: 440px) {
+  .pe-crop {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.pe-crop-side {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pe-crop-label {
+  color: var(--text-3);
+  font-size: 11px;
+}
+
+.icon-btn.pe-inline-btn {
+  width: 22px;
+  height: 18px;
+  margin: 0 -4px 0 0;
+  border-radius: 5px;
+}
+
+.pe-spinning svg {
+  animation: spin 0.9s linear infinite;
+}
+
+.pe.is-readonly .segmented-item:disabled,
+.pe.is-readonly .chip:disabled,
+.pe.is-readonly .switch:disabled {
+  opacity: 0.75;
+}
+
+.pe.is-readonly .segmented-item.is-active:disabled {
+  opacity: 1;
+}
+
+.pe.is-readonly .select select:disabled,
+.pe.is-readonly .input.is-disabled {
+  opacity: 0.8;
+}
+
+.pe.is-readonly .slider input:disabled {
+  opacity: 0.7;
+}
