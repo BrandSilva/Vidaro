@@ -70,7 +70,7 @@ contextBridge.exposeInMainWorld('vidaro', {
     analyze: (filePath) => invoke('convert:analyze', filePath),
     cancelAnalyze: (filePath) => invoke('convert:cancel-analyze', filePath),
     thumbnail: (filePath) => invoke('convert:thumbnail', filePath),
-    describe: (preset, media) => invoke('convert:describe', preset, media),
+    describe: (preset, media, options) => invoke('convert:describe', preset, media, options),
     encoders: () => invoke('convert:encoders'),
     detectEncoders: () => invoke('convert:detect-encoders'),
     enqueue: (request) => invoke('convert:enqueue', request),

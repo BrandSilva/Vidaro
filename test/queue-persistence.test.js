@@ -149,7 +149,7 @@ const JOB_KEYS = [
 
 const states = (queue) => queue.list().map((job) => job.state);
 
-test('jobs survive a crash with transient progress stripped and come back interrupted', async (t) => {
+test('jobs survive a crash keeping only their last percent and come back interrupted', async (t) => {
   const { make, fileAt } = setup(t);
   const file = fileAt('session.json');
   const first = make({ file });
@@ -186,7 +186,7 @@ test('jobs survive a crash with transient progress stripped and come back interr
     [a, b, c, d, e]
   );
   assert.deepEqual(states(second.queue), ['interrupted', 'interrupted', 'done', 'failed', 'paused']);
-  assert.deepEqual(list[0].progress, { percent: null, stage: null, speed: null, eta: null, detail: null });
+  assert.deepEqual(list[0].progress, { percent: 30, stage: null, speed: null, eta: null, detail: null });
   assert.equal(list[0].attempts, 1);
   assert.equal(list[0].groupId, 'PL1');
   assert.equal(list[0].groupTitle, 'List');
@@ -212,7 +212,8 @@ test('without autoResume nothing starts after a restart', async (t) => {
   queue.load();
   await flush();
   assert.deepEqual(states(queue), ['interrupted', 'interrupted', 'interrupted', 'paused']);
-  assert.ok(queue.list().every((job) => job.progress.percent === null && job.progress.stage === null));
+  assert.ok(queue.list().every((job) => job.progress.stage === null && job.progress.speed === null && job.progress.detail === null));
+  assert.ok(queue.list().every((job) => job.progress.percent === 12));
   assert.equal(download.runs.length, 0);
   const saved = await waitForFile(file, (data) => data.jobs[0].state === 'interrupted');
   assert.deepEqual(
@@ -236,6 +237,8 @@ test('autoResume requeues running, queued and interrupted jobs and starts them, 
   await flush();
   assert.deepEqual(states(queue), ['running', 'running', 'queued', 'paused', 'done', 'failed']);
   assert.deepEqual(download.ids(), ['r1', 'q1']);
+  assert.equal(download.last('r1').job.progress.percent, 12);
+  assert.equal(queue.get('r1').progress.percent, null);
   assert.equal(queue.get('r1').attempts, 2);
   assert.deepEqual(queue.get('d1').progress, { percent: 12, stage: null, speed: null, eta: null, detail: '12 MB' });
 });
@@ -357,7 +360,7 @@ test('malformed jobs are dropped and the valid ones are coerced', async (t) => {
   assert.equal(good1.groupTitle, null);
   assert.equal(good1.parentId, null);
   assert.equal(good1.neverStarted, false);
-  assert.deepEqual(good1.progress, { percent: null, stage: null, speed: null, eta: null, detail: null });
+  assert.deepEqual(good1.progress, { percent: 100, stage: null, speed: null, eta: null, detail: null });
   assert.equal(good2.kind, 'convert');
   assert.deepEqual(good2.result, { path: 'C:\\x.mp4', size: null, warnings: [], skipped: false });
   assert.equal(good2.error, null);

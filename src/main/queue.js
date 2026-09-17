@@ -142,7 +142,9 @@ function restoreJob(job, autoResume) {
   const restored = { ...job };
   const unfinished = job.state === 'running' || job.state === 'queued' || (autoResume && job.state === 'interrupted');
   if (unfinished) restored.state = autoResume ? 'queued' : 'interrupted';
-  restored.progress = FINISHED.has(restored.state) ? stoppedProgress(job.progress) : emptyProgress();
+  restored.progress = FINISHED.has(restored.state)
+    ? stoppedProgress(job.progress)
+    : { ...emptyProgress(), percent: job.progress.percent };
   return restored;
 }
 
@@ -661,6 +663,7 @@ class Queue extends EventEmitter {
   }
 
   start(job) {
+    const previousProgress = { ...job.progress };
     job.state = 'running';
     job.attempts += 1;
     job.startedAt = this.now();
@@ -700,7 +703,7 @@ class Queue extends EventEmitter {
     try {
       const runner = this.runners[job.kind];
       pending = runner
-        ? Promise.resolve(runner.run(cloneJob(job), ctx))
+        ? Promise.resolve(runner.run(cloneJob({ ...job, progress: previousProgress }), ctx))
         : Promise.reject(new JobError('unexpected', { detail: `No runner for ${job.kind} jobs` }));
     } catch (error) {
       pending = Promise.reject(error);
