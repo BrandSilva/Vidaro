@@ -1,7 +1,9 @@
 const fs = require('node:fs');
 const fsp = require('node:fs/promises');
+const os = require('node:os');
 const path = require('node:path');
 const { app, dialog, shell, clipboard } = require('electron');
+const paths = require('../paths');
 const v = require('../validate');
 const settingsSchema = require('../settings');
 const { isAllowedExternal } = require('../window');
@@ -91,6 +93,43 @@ async function diskSpace(folder) {
   }
 }
 
+function bundledManifest() {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(paths.bundledBinDir(), 'manifest.json'), 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+async function gpuNames() {
+  try {
+    const info = await app.getGPUInfo('complete');
+    const names = (info.gpuDevice || []).map((device) => {
+      const name = device.deviceString || device.driverVendor || `${device.vendorId}:${device.deviceId}`;
+      return device.driverVersion ? `${name} (driver ${device.driverVersion})` : name;
+    });
+    return [...new Set(names)];
+  } catch {
+    return [];
+  }
+}
+
+async function diagnostics() {
+  const manifest = bundledManifest();
+  const ffmpeg = manifest.ffmpeg ? `${manifest.ffmpeg} (gyan.dev essentials)` : null;
+  const cpus = os.cpus();
+  return {
+    tools: { ffmpeg, ffprobe: ffmpeg },
+    folders: { data: paths.localDataDir() },
+    system: {
+      cpu: cpus[0] ? cpus[0].model.trim() : null,
+      cores: cpus.length,
+      memory: os.totalmem(),
+      gpu: await gpuNames()
+    }
+  };
+}
+
 function registerBasics(ctx, handle) {
   handle('app:info', () => ({
     version: app.getVersion(),
@@ -103,6 +142,8 @@ function registerBasics(ctx, handle) {
     userData: app.getPath('userData')
   }));
 
+  handle('app:diagnostics', () => diagnostics());
+  handle('settings:defaults', () => settingsSchema.defaults());
   handle('app:notices', () => ctx.notices.list());
   handle('app:dismiss-notice', (id) => ctx.notices.dismiss(v.text(id, { max: 64 })));
   handle('app:renderer-ready', () => ctx.rendererReady());

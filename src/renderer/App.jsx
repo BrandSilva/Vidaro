@@ -11,6 +11,8 @@ import { StatusBar } from './shell/StatusBar.jsx';
 import { CloseDialog } from './shell/CloseDialog.jsx';
 import { NoticeStack } from './shell/NoticeStack.jsx';
 import { DropLayer } from './shell/DropLayer.jsx';
+import { FinishCountdown } from './shell/FinishCountdown.jsx';
+import { initPresets } from './state/presets.js';
 import { DownloadPage } from './pages/download/DownloadPage.jsx';
 import { ConvertPage } from './pages/convert/ConvertPage.jsx';
 import { QueuePage } from './pages/queue/QueuePage.jsx';
@@ -92,6 +94,7 @@ export default function App() {
   useEffect(() => {
     let disposeApp = null;
     let disposeQueue = null;
+    const presetsReady = initPresets();
     let alive = true;
     initApp().then((dispose) => {
       if (alive) disposeApp = dispose;
@@ -109,6 +112,7 @@ export default function App() {
       alive = false;
       disposeApp?.();
       disposeQueue?.();
+      presetsReady.then((dispose) => dispose?.(), () => {});
     };
   }, []);
 
@@ -126,6 +130,7 @@ export default function App() {
       <StatusBar />
       <NavigationShortcuts />
       <CloseDialog />
+      <FinishCountdown />
       <DropLayer />
     </div>
   );

@@ -31,6 +31,7 @@ contextBridge.exposeInMainWorld('vidaro', {
   },
   settings: {
     get: () => invoke('settings:get'),
+    defaults: () => invoke('settings:defaults'),
     update: (patch) => invoke('settings:update', patch),
     reset: (keys) => invoke('settings:reset', keys),
     onChanged: subscribe('settings:changed')

@@ -79,11 +79,11 @@ function createPowerManager({ queue, getWindow, getSettings, send, showWindow, l
     cancelCountdown();
     let remaining = COUNTDOWN_SECONDS;
     showWindow();
-    send('app:finish-countdown', { action, remaining });
+    send('app:finish-countdown', { action, remaining, total: COUNTDOWN_SECONDS });
     const timer = setInterval(async () => {
       remaining -= 1;
       if (remaining > 0) {
-        send('app:finish-countdown', { action, remaining });
+        send('app:finish-countdown', { action, remaining, total: COUNTDOWN_SECONDS });
         return;
       }
       cancelCountdown();

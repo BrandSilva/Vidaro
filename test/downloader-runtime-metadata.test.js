@@ -77,6 +77,19 @@ describe('fetch', () => {
     assert.equal(ytdlp.tracked, 1);
   });
 
+  test('cookies and proxy chosen on the page win over the saved settings', async () => {
+    const settings = { download: { cookiesMode: 'none', cookiesBrowser: 'edge', proxy: 'http://saved:1' } };
+    const { fetcher, fake } = setup(() => json('info-youtube-video.json'), { settings });
+    await fetcher.fetch(VIDEO_URL, { network: { cookiesMode: 'browser', cookiesBrowser: 'firefox', proxy: 'http://page:2' } });
+    const args = fake.calls[0].args;
+    assert.equal(args[args.indexOf('--cookies-from-browser') + 1], 'firefox');
+    assert.equal(args[args.indexOf('--proxy') + 1], 'http://page:2');
+    await fetcher.fetch(VIDEO_URL);
+    const plain = fake.calls[1].args;
+    assert.equal(plain.includes('--cookies-from-browser'), false);
+    assert.equal(plain[plain.indexOf('--proxy') + 1], 'http://saved:1');
+  });
+
   test('offers the whole playlist when a video link carries one', async () => {
     const { fetcher } = setup(() => json('info-youtube-video.json'));
     const result = await fetcher.fetch(`${VIDEO_URL}&list=PLa1F2ddGya_8u-HEvmfCVuS_OImW8HaLd`);

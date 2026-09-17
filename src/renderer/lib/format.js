@@ -1,3 +1,4 @@
+const UI_LOCALE = 'en-US';
 const BYTE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB'];
 
 export function formatBytes(bytes, digits = 1) {
@@ -64,13 +65,13 @@ export function formatPercent(value) {
 
 export function formatDate(timestamp) {
   if (!Number.isFinite(timestamp)) return '';
-  return new Date(timestamp).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+  return new Date(timestamp).toLocaleString(UI_LOCALE, { dateStyle: 'medium', timeStyle: 'short' });
 }
 
 export function formatUploadDate(yyyymmdd) {
   if (typeof yyyymmdd !== 'string' || !/^\d{8}$/.test(yyyymmdd)) return '';
   const date = new Date(Number(yyyymmdd.slice(0, 4)), Number(yyyymmdd.slice(4, 6)) - 1, Number(yyyymmdd.slice(6, 8)));
-  return date.toLocaleDateString(undefined, { dateStyle: 'medium' });
+  return date.toLocaleDateString(UI_LOCALE, { dateStyle: 'medium' });
 }
 
 export function baseName(filePath) {

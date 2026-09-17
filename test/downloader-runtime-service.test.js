@@ -126,13 +126,30 @@ describe('download IPC', () => {
   test('validates links before fetching', async () => {
     const { handlers } = fakeCtx();
     const fetch = handlers.get('download:fetch-info');
-    assert.deepEqual(await fetch(' https://example.com/v ', { playlist: true }), { url: 'https://example.com/v', options: { playlist: true } });
-    assert.deepEqual(await fetch('https://example.com/v'), { url: 'https://example.com/v', options: { playlist: false } });
-    assert.deepEqual(await fetch('https://example.com/v', { playlist: 'yes' }), { url: 'https://example.com/v', options: { playlist: false } });
+    assert.deepEqual(await fetch(' https://example.com/v ', { playlist: true }), { url: 'https://example.com/v', options: { playlist: true, network: null } });
+    assert.deepEqual(await fetch('https://example.com/v'), { url: 'https://example.com/v', options: { playlist: false, network: null } });
+    assert.deepEqual(await fetch('https://example.com/v', { playlist: 'yes' }), { url: 'https://example.com/v', options: { playlist: false, network: null } });
     assert.throws(() => fetch('file:///C:/x'), ValidationError);
     assert.throws(() => fetch(42), ValidationError);
     assert.throws(() => fetch('https://example.com/v', 'playlist'), ValidationError);
     assert.equal(handlers.get('download:cancel-fetch')(), true);
+  });
+
+  test('passes page-level cookies and proxy to the metadata fetch after validating them', async () => {
+    const { handlers } = fakeCtx();
+    const fetch = handlers.get('download:fetch-info');
+    const network = { cookiesMode: 'file', cookiesFile: 'C:\\Cookies\\yt.txt', proxy: 'http://127.0.0.1:8080' };
+    assert.deepEqual(await fetch('https://example.com/v', { network }), {
+      url: 'https://example.com/v',
+      options: { playlist: false, network }
+    });
+    assert.deepEqual((await fetch('https://example.com/v', { network: { cookiesMode: 'browser', cookiesBrowser: 'firefox' } })).options.network, {
+      cookiesMode: 'browser',
+      cookiesBrowser: 'firefox'
+    });
+    assert.throws(() => fetch('https://example.com/v', { network: { cookiesMode: 'magic' } }), ValidationError);
+    assert.throws(() => fetch('https://example.com/v', { network: { cookiesMode: 'file', cookiesFile: 'relative.txt' } }), ValidationError);
+    assert.throws(() => fetch('https://example.com/v', { network: 'proxy' }), ValidationError);
   });
 
   test('enqueue resolves the preset and starts by default', () => {

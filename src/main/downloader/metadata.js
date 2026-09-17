@@ -111,14 +111,15 @@ function createMetadataFetcher({
     }
   }
 
-  async function fetch(url, { playlist = false } = {}) {
+  async function fetch(url, { playlist = false, network = null } = {}) {
     if (disposed) return { canceled: true };
     cancel();
     const controller = new AbortController();
     current = controller;
     const kind = urlKind(url);
     const wantPlaylist = playlist === true || PLAYLIST_KINDS.has(kind);
-    const options = networkOptions(settingsSnapshot());
+    const base = settingsSnapshot();
+    const options = networkOptions(network && typeof network === 'object' ? { ...base, ...network } : base);
     const key = JSON.stringify([wantPlaylist, url, options]);
     const cached = readCache(key);
     if (cached) {

@@ -20,11 +20,24 @@ function resolveAfter(ctx, after) {
   return { preset, keepOriginal: request.keepOriginal !== false };
 }
 
+const COOKIE_MODES = ['none', 'browser', 'file'];
+
+function networkArg(value) {
+  if (value === undefined || value === null) return null;
+  const request = v.object(value, 'network');
+  const network = {};
+  if (request.cookiesMode !== undefined) network.cookiesMode = v.oneOf(request.cookiesMode, COOKIE_MODES, 'cookies mode');
+  if (request.cookiesBrowser !== undefined) network.cookiesBrowser = v.text(request.cookiesBrowser, { min: 1, max: 32, name: 'browser' });
+  if (request.cookiesFile !== undefined && request.cookiesFile !== '') network.cookiesFile = v.absolutePath(request.cookiesFile, 'cookies file');
+  if (request.proxy !== undefined) network.proxy = v.text(request.proxy, { max: 512, name: 'proxy' });
+  return network;
+}
+
 function registerDownload(ctx, handle) {
   handle('download:fetch-info', (url, options) => {
     const link = v.webUrl(url);
-    const playlist = options === undefined || options === null ? false : v.bool(v.object(options, 'options').playlist);
-    return ctx.downloader.fetchInfo(link, { playlist });
+    const request = options === undefined || options === null ? {} : v.object(options, 'options');
+    return ctx.downloader.fetchInfo(link, { playlist: v.bool(request.playlist), network: networkArg(request.network) });
   });
 
   handle('download:cancel-fetch', () => ctx.downloader.cancelFetch());
