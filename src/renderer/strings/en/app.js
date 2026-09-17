@@ -1,0 +1,28 @@
+export const app = {
+  closeTitle: 'Jobs are still running',
+  closeText: (n) =>
+    n === 1 ? 'One job is still running. What should Vidaro do?' : `${n} jobs are still running. What should Vidaro do?`,
+  closeBackground: 'Keep working in the background',
+  closeBackgroundHint: 'Vidaro stays in the notification area',
+  closePause: 'Pause and quit',
+  closePauseHint: 'Resume later from the Queue',
+  closeCancel: 'Cancel and quit',
+  closeCancelHint: 'Unfinished files are deleted',
+  keyHintConfirm: 'to confirm',
+  keyHintCancel: 'to go back',
+  settingsRecovered: 'Your settings file could not be read, so defaults were loaded. A backup was kept next to it.',
+  queueRecovered: 'The saved queue could not be read and was cleared. A backup was kept next to it.',
+  presetsRecovered: 'Your presets file could not be read, so only the built-in presets are available. A backup was kept next to it.',
+  dropFiles: 'Drop files to convert',
+  dropLink: 'Drop the link to download',
+  updateReady: (version) => `Vidaro ${version} is ready to install`,
+  updateDownloading: (percent) => `Downloading update ${percent}`,
+  updateInstall: 'Install and restart',
+  updateLater: 'Later',
+  updateSkip: 'Skip this version',
+  updateRunningJobs: 'Jobs are running. They will be paused before the update installs.',
+  updateFailed: 'The update could not be downloaded. Try again later.',
+  updateTitle: (version) => `Vidaro ${version} is available`,
+  updateDownload: 'Download update',
+  viewReleaseNotes: 'What’s new'
+};

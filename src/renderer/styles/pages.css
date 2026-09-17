@@ -1,0 +1,23 @@
+.notice-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 24px 0;
+  flex: none;
+}
+
+.rail-tooltip {
+  display: flex;
+}
+
+.rail-tooltip .rail-item {
+  flex: 1;
+}
+
+.status-item.is-low {
+  color: var(--warning);
+}
+
+.status-item.is-low svg {
+  color: var(--warning);
+}
