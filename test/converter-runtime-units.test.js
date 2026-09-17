@@ -391,12 +391,67 @@ describe('encoder probe', () => {
     assert.equal(again.calls.length, 0);
     assert.deepEqual(state.available.h264, ['h264_qsv', 'h264_mf', 'libx264']);
     const updated = machine({ tenBitQsv: false });
-    const third = createEncoderProbe({ ffmpeg: 'ffmpeg.exe', cacheFile, cacheKey: () => 'v2|new driver', run: updated.run });
+    const third = createEncoderProbe({ ffmpeg: 'ffmpeg.exe', cacheFile, cacheKey: () => 'v2|new driver', run: updated.run, retryDelays: [] });
     const fresh = await third.detect();
     assert.ok(updated.calls.length > 0);
     assert.deepEqual(fresh.tenBit, []);
     assert.equal(readCacheFile(cacheFile, 'v1|gpu'), null);
     assert.deepEqual(readCacheFile(cacheFile, 'v2|new driver').tenBit, []);
+  });
+
+  test('a hardware encoder that fails once is tested again before it is dropped', async () => {
+    let qsvCalls = 0;
+    const flaky = fakeRun((args) => {
+      if (args.includes('-encoders')) return { stdout: ' V..... h264_qsv  x\n V....D libx264 x' };
+      if (valueOf(args, '-c:v') === 'h264_qsv') {
+        qsvCalls += 1;
+        return qsvCalls === 1 ? { code: 1, stderrLines: ['[h264_qsv @ 01] Error during encoding: device busy'] } : { code: 0 };
+      }
+      return { code: 0 };
+    });
+    const probe = createEncoderProbe({ ffmpeg: 'ffmpeg.exe', run: flaky.run, retryDelays: [1, 1] });
+    const state = await probe.detect();
+    assert.deepEqual(state.available.h264, ['h264_qsv', 'libx264']);
+    assert.equal(qsvCalls, 2);
+    probe.dispose();
+  });
+
+  test('encoders that failed before are rechecked in the background after loading the cache', async (t) => {
+    const cacheFile = tempFile(t);
+    fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
+    fs.writeFileSync(
+      cacheFile,
+      JSON.stringify({ version: 1, key: 'k', detectedAt: 1, available: { h264: ['h264_mf', 'libx264'], hevc: [], av1: [], vp9: [] }, tenBit: [], failed: ['h264_qsv'] })
+    );
+    const good = fakeRun((args) => (args.includes('-encoders') ? { stdout: ENCODER_LIST } : { code: 0 }));
+    const probe = createEncoderProbe({ ffmpeg: 'ffmpeg.exe', cacheFile, cacheKey: 'k', run: good.run, retryDelays: [] });
+    const changed = new Promise((resolve) => {
+      probe.on('changed', (state) => {
+        if (state.available.h264.includes('h264_qsv')) resolve(state);
+      });
+    });
+    const first = await probe.detect();
+    assert.equal(first.status, 'ready');
+    assert.deepEqual(first.available.h264, ['h264_mf', 'libx264']);
+    const later = await changed;
+    assert.deepEqual(later.available.h264, ['h264_qsv', 'h264_mf', 'libx264']);
+    assert.deepEqual(readCacheFile(cacheFile, 'k').failed, []);
+    assert.deepEqual(readCacheFile(cacheFile, 'k').available.h264, ['h264_qsv', 'h264_mf', 'libx264']);
+    probe.dispose();
+  });
+
+  test('an encoder that keeps failing stays out and is remembered as failed', async (t) => {
+    const cacheFile = tempFile(t);
+    const bad = fakeRun((args) => {
+      if (args.includes('-encoders')) return { stdout: ' V..... h264_qsv  x\n V....D libx264 x' };
+      return valueOf(args, '-c:v') === 'h264_qsv' ? { code: 1, stderrLines: ['[h264_qsv @ 01] Invalid FrameType:0'] } : { code: 0 };
+    });
+    const probe = createEncoderProbe({ ffmpeg: 'ffmpeg.exe', cacheFile, cacheKey: 'k', run: bad.run, retryDelays: [1] });
+    const state = await probe.detect();
+    assert.deepEqual(state.available.h264, ['libx264']);
+    assert.equal(bad.calls.filter((call) => valueOf(call.args, '-c:v') === 'h264_qsv').length, 2);
+    assert.deepEqual(readCacheFile(cacheFile, 'k').failed, ['h264_qsv']);
+    probe.dispose();
   });
 
   test('a damaged cache file is ignored', async (t) => {
@@ -450,7 +505,7 @@ describe('encoder probe', () => {
       if (args.includes('-encoders')) return { stdout: ' V..... h264_qsv  x\n V....D libx264 x' };
       return new Promise((resolve) => options.signal.addEventListener('abort', () => resolve({ code: 1 }), { once: true }));
     });
-    const probe = createEncoderProbe({ ffmpeg: 'ffmpeg.exe', timeoutMs: 30, run: hanging.run });
+    const probe = createEncoderProbe({ ffmpeg: 'ffmpeg.exe', timeoutMs: 30, run: hanging.run, retryDelays: [] });
     const state = await probe.detect();
     assert.deepEqual(state.available.h264, ['libx264']);
   });

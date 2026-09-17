@@ -43,21 +43,41 @@ function readCacheFile(file, key) {
   return {
     available,
     tenBit: cleanList(data.tenBit),
+    failed: cleanList(data.failed).filter((name) => encoders.isHardware(name)),
     detectedAt: Number.isFinite(data.detectedAt) ? data.detectedAt : null
   };
+}
+
+function pause(ms, signal) {
+  return new Promise((resolve, reject) => {
+    if (signal.aborted) {
+      reject(processes.abortError(signal));
+      return;
+    }
+    const timer = setTimeout(() => {
+      signal.removeEventListener('abort', onAbort);
+      resolve();
+    }, ms);
+    const onAbort = () => {
+      clearTimeout(timer);
+      reject(processes.abortError(signal));
+    };
+    signal.addEventListener('abort', onAbort, { once: true });
+  });
 }
 
 function orderLike(list, reference) {
   return reference.filter((name) => list.includes(name));
 }
 
-function createEncoderProbe({ ffmpeg, cacheFile = null, cacheKey = '', timeoutMs = 20000, run = processes.run }) {
+function createEncoderProbe({ ffmpeg, cacheFile = null, cacheKey = '', timeoutMs = 20000, run = processes.run, retryDelays = [1500, 4000] }) {
   const emitter = new EventEmitter();
   const lifetime = new AbortController();
   const broken = new Set();
-  let state = { status: 'unknown', available: emptyAvailable(), tenBit: [], detectedAt: null };
+  let state = { status: 'unknown', available: emptyAvailable(), tenBit: [], failed: [], detectedAt: null };
   let current = null;
   let disposed = false;
+  let generation = 0;
 
   function snapshot() {
     return {
@@ -88,7 +108,7 @@ function createEncoderProbe({ ffmpeg, cacheFile = null, cacheKey = '', timeoutMs
 
   function saveCache(key) {
     if (!cacheFile) return;
-    const data = { version: CACHE_VERSION, key, detectedAt: state.detectedAt, available: state.available, tenBit: state.tenBit };
+    const data = { version: CACHE_VERSION, key, detectedAt: state.detectedAt, available: state.available, tenBit: state.tenBit, failed: state.failed };
     try {
       writeFileAtomicSync(cacheFile, `${JSON.stringify(data, null, 2)}\n`);
     } catch {
@@ -117,10 +137,41 @@ function createEncoderProbe({ ffmpeg, cacheFile = null, cacheKey = '', timeoutMs
     }
   }
 
+  async function testWithRetry(name, tenBit) {
+    let result = await testEncoder(name, tenBit);
+    for (const delay of retryDelays) {
+      if (result.ok || result.driverMissing) break;
+      await pause(delay, lifetime.signal);
+      result = await testEncoder(name, tenBit);
+    }
+    return result;
+  }
+
+  async function recheckFailed(names, key, owner) {
+    for (const name of names) {
+      if (disposed || owner !== generation) return;
+      const result = await testWithRetry(name, false);
+      if (disposed || owner !== generation || !result.ok) continue;
+      const codec = encoders.codecOf(name);
+      const tenBitOk = encoders.supportsTenBit(name) && (await testWithRetry(name, true)).ok;
+      if (disposed || owner !== generation) return;
+      const available = { ...state.available, [codec]: orderLike([...state.available[codec], name], encoders.CANDIDATES[codec]) };
+      state = {
+        ...state,
+        available,
+        tenBit: tenBitOk ? [...new Set([...state.tenBit, name])] : state.tenBit,
+        failed: state.failed.filter((item) => item !== name)
+      };
+      saveCache(key);
+      changed();
+    }
+  }
+
   async function runDetection() {
     const compiled = await listCompiled(lifetime.signal);
     const available = emptyAvailable();
     const tenBit = [];
+    const failed = [];
     const missingFamilies = new Set();
     const queue = CODECS.flatMap((codec) => encoders.CANDIDATES[codec].map((name) => ({ codec, name }))).filter(({ name }) => compiled.has(name));
     let index = 0;
@@ -133,22 +184,28 @@ function createEncoderProbe({ ffmpeg, cacheFile = null, cacheKey = '', timeoutMs
       const family = encoders.familyOf(name);
       if (missingFamilies.has(family)) continue;
       emitter.emit('progress', { name, index, total: queue.length });
-      const result = await testEncoder(name, false);
+      const result = await testWithRetry(name, false);
       if (result.driverMissing) missingFamilies.add(family);
-      if (!result.ok) continue;
+      if (!result.ok) {
+        if (!result.driverMissing) failed.push(name);
+        continue;
+      }
       available[codec].push(name);
-      if (encoders.supportsTenBit(name) && (await testEncoder(name, true)).ok) tenBit.push(name);
+      if (encoders.supportsTenBit(name) && (await testWithRetry(name, true)).ok) tenBit.push(name);
     }
     for (const codec of CODECS) available[codec] = orderLike(available[codec], encoders.CANDIDATES[codec]);
-    return { available, tenBit, compiled: compiled.size > 0 };
+    return { available, tenBit, failed, compiled: compiled.size > 0 };
   }
 
   async function detectNow(force) {
     const key = await resolveKey();
     const cached = !force && cacheFile ? readCacheFile(cacheFile, key) : null;
+    generation += 1;
+    const owner = generation;
     if (cached) {
       state = { status: 'ready', ...cached };
       changed();
+      if (cached.failed.length) recheckFailed(cached.failed, key, owner).catch(() => {});
       return snapshot();
     }
     const previous = state;
@@ -156,7 +213,7 @@ function createEncoderProbe({ ffmpeg, cacheFile = null, cacheKey = '', timeoutMs
     changed();
     try {
       const found = await runDetection();
-      state = { status: 'ready', available: found.available, tenBit: found.tenBit, detectedAt: Date.now() };
+      state = { status: 'ready', available: found.available, tenBit: found.tenBit, failed: found.failed, detectedAt: Date.now() };
       if (force) broken.clear();
       if (found.compiled) saveCache(key);
     } catch (error) {
