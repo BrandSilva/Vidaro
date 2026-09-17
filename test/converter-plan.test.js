@@ -394,12 +394,12 @@ describe('buildPlan audio', () => {
     assert.equal(valueOf(args, '-f'), 'wav');
   });
 
-  test('WAV from a 24-bit source stays 24-bit', () => {
+  test('WAV stays 16-bit PCM even from a 24-bit source, as the preset promises', () => {
     const item = media('ntsc-dv', (data) => {
       data.streams[1].bits_per_raw_sample = '24';
     });
     const { args } = plan.buildPlan({ media: item, preset: preset({ container: 'wav', video: { mode: 'none' }, audio: { codec: 'pcm' } }), outputPath: OUT });
-    assert.equal(valueOf(args, '-c:a:0'), 'pcm_s24le');
+    assert.equal(valueOf(args, '-c:a:0'), 'pcm_s16le');
   });
 
   test('all audio tracks are mapped and encoded one by one', () => {
@@ -432,13 +432,12 @@ describe('buildPlan audio', () => {
     assert.equal(valueOf(result.args, '-f'), 'matroska');
   });
 
-  test('PCM cannot be copied into MP4', () => {
+  test('PCM that cannot be copied into MP4 is re-encoded with the preset codec', () => {
     const result = plan.buildPlan({ media: media('ntsc-dv'), preset: preset({ audio: { mode: 'copy' } }), outputPath: OUT });
-    assert.equal(result.args, null);
-    assert.equal(result.errors[0].code, 'audio-copy-incompatible');
-    assert.equal(result.errors[0].detail, 'pcm_s16le');
-    assert.equal(typeof result.errors[0].message, 'string');
-    assert.equal(result.errors[0].retryable, false);
+    assert.deepEqual(result.errors, []);
+    assert.equal(valueOf(result.args, '-c:a:0'), 'aac');
+    assert.ok(result.warnings.includes('audio-reencoded'));
+    assert.equal(result.summary.audio[0].reencoded, true);
   });
 
   test('audio none drops audio', () => {

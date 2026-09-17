@@ -697,6 +697,7 @@ function parseProbe(json, { path: filePath = '', size = null } = {}) {
   const streams = Array.isArray(data.streams) ? data.streams : [];
   const container = containerOf(format.format_name, filePath || format.filename);
   const videoStream = streams.find((stream) => stream.codec_type === 'video' && !isAttachedPicture(stream));
+  const coverStream = streams.find((stream) => stream.codec_type === 'video' && isAttachedPicture(stream));
   const video = videoStream ? parseVideo(videoStream) : null;
   const audio = streams.filter((stream) => stream.codec_type === 'audio').map(parseAudio);
   const subtitles = streams.filter((stream) => stream.codec_type === 'subtitle').map(parseSubtitle);
@@ -718,6 +719,7 @@ function parseProbe(json, { path: filePath = '', size = null } = {}) {
     video,
     audio,
     subtitles,
+    cover: coverStream ? { index: coverStream.index, codec: coverStream.codec_name || null } : null,
     chapters: Array.isArray(data.chapters) ? data.chapters.length : 0,
     badges: [],
     warnings: []

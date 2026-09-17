@@ -111,6 +111,20 @@ describe('outputPathFor', () => {
     assert.equal(result.path, 'E:\\Out\\Show 1998 (3).mp4');
   });
 
+  test('a conversion that replaces its own source may reuse the source name', () => {
+    const source = 'E:\\Downloads\\Clip.mp4';
+    const exists = existsIn([source]);
+    assert.equal(outputPathFor({ inputPath: source, folder: 'E:\\Downloads', extension: 'mp4', exists }).path, 'E:\\Downloads\\Clip (2).mp4');
+    assert.deepEqual(outputPathFor({ inputPath: source, folder: 'E:\\Downloads', extension: 'mp4', exists, replaceInput: true }), {
+      path: source,
+      skip: false,
+      overwrite: false
+    });
+    assert.equal(outputPathFor({ inputPath: source, folder: 'E:\\Downloads', extension: 'mp4', collision: 'skip', exists, replaceInput: true }).skip, false);
+    const other = existsIn([source, 'E:\\Downloads\\Clip.mkv']);
+    assert.equal(outputPathFor({ inputPath: source, folder: 'E:\\Downloads', extension: 'mkv', exists: other, replaceInput: true }).path, 'E:\\Downloads\\Clip (2).mkv');
+  });
+
   test('rename skips paths reserved by other queued jobs', () => {
     const result = outputPathFor({ inputPath: input, folder: 'E:\\Out', extension: 'mp4', exists: existsIn([]), reserved: ['e:\\out\\show 1998.mp4'] });
     assert.equal(result.path, 'E:\\Out\\Show 1998 (2).mp4');

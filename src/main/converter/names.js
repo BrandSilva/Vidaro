@@ -75,24 +75,28 @@ function outputPathFor({
   folder = null,
   useSourceFolder = false,
   template = '{name}',
+  baseName = null,
   preset = '',
   resolution = '',
   date = null,
   extension,
   collision = 'rename',
   exists = fs.existsSync,
-  reserved = []
+  reserved = [],
+  replaceInput = false
 }) {
   const targetFolder = useSourceFolder || !folder ? path.win32.dirname(inputPath) : folder;
   const sourceName = splitExt(path.win32.basename(inputPath)).base;
-  const base = renderOutputName(template, { name: sourceName, preset, resolution, date });
+  const literal = typeof baseName === 'string' ? sanitizeFileName(baseName, { fallback: '' }) : '';
+  const base = literal || renderOutputName(template, { name: sourceName, preset, resolution, date });
   const taken = new Set([...reserved].map((item) => path.win32.resolve(item).normalize('NFC').toLowerCase()));
-  const isInput = (candidate) => samePath(candidate, inputPath);
+  const isInput = (candidate) => !replaceInput && samePath(candidate, inputPath);
+  const occupied = (candidate) => !(replaceInput && samePath(candidate, inputPath)) && exists(candidate);
   const isReserved = (candidate) => taken.has(path.win32.resolve(candidate).normalize('NFC').toLowerCase());
   const options = { reserve: PARTIAL_SUFFIX.length };
   if (collision === 'overwrite' || collision === 'skip') {
     const direct = uniquePath(targetFolder, base, extension, (candidate) => isInput(candidate) || isReserved(candidate), options);
-    const present = exists(direct);
+    const present = occupied(direct);
     if (collision === 'skip' && present) return { path: direct, skip: true, overwrite: false };
     return { path: direct, skip: false, overwrite: present };
   }
@@ -100,10 +104,10 @@ function outputPathFor({
     targetFolder,
     base,
     extension,
-    (candidate) => isInput(candidate) || isReserved(candidate) || exists(candidate) || exists(partialPathFor(candidate)),
+    (candidate) => isInput(candidate) || isReserved(candidate) || occupied(candidate) || exists(partialPathFor(candidate)),
     options
   );
   return { path: free, skip: false, overwrite: false };
 }
 
-module.exports = { renderOutputName, outputPathFor, partialPathFor, resolutionToken, dateText, PARTIAL_SUFFIX };
+module.exports = { renderOutputName, outputPathFor, partialPathFor, samePath, resolutionToken, dateText, PARTIAL_SUFFIX };

@@ -36,7 +36,7 @@ const AUDIO_COPY = {
   opus: new Set(['opus'])
 };
 
-const MKV_COPY_DENY = new Set(['pcm_dvd', 'pcm_bluray', 'dvd_nav_packet', 'bin_data']);
+const MKV_COPY_DENY = new Set(['pcm_dvd', 'pcm_bluray', 'dvd_nav_packet', 'bin_data', 'adpcm_ima_qt']);
 const MKV_SUBTITLE_COPY = new Set(['subrip', 'ass', 'ssa', 'webvtt', 'dvd_subtitle', 'hdmv_pgs_subtitle', 'dvb_subtitle']);
 
 const AUDIO_CODECS = {
@@ -46,7 +46,7 @@ const AUDIO_CODECS = {
   ac3: { encoder: 'ac3', maxChannels: 6, rates: [48000, 44100, 32000], label: 'AC-3' },
   pcm: { encoder: 'pcm_s16le', maxChannels: 8, rates: null, label: 'PCM' },
   flac: { encoder: 'flac', maxChannels: 8, rates: null, label: 'FLAC' },
-  vorbis: { encoder: 'libvorbis', maxChannels: 8, rates: null, label: 'Vorbis' }
+  vorbis: { encoder: 'libvorbis', maxChannels: 8, rates: [48000, 44100], label: 'Vorbis' }
 };
 
 const AC3_BITRATES = [32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384, 448, 512, 576, 640];
@@ -150,13 +150,21 @@ function targetChannels(track, audio, codecInfo) {
   return channels;
 }
 
-function pcmEncoder(track) {
-  const depth = track.bitDepth || 16;
-  return depth > 16 ? 'pcm_s24le' : 'pcm_s16le';
+function bitrateRange(codec, channels) {
+  const count = Math.max(1, channels || 2);
+  if (codec === 'opus') return { min: 6, max: 256 * count };
+  if (codec === 'vorbis') return { min: { 1: 32, 2: 45, 6: 84 }[count] || 32 * count, max: count === 2 ? 500 : 240 * count };
+  if (codec === 'ac3') return { min: count > 2 ? 192 : 32, max: 640 };
+  return { min: 32, max: Infinity };
 }
 
-function audioBitrateArgs(codec, audio, index) {
-  const bitrate = Math.max(32, Number(audio.bitrate) || 192);
+function clampBitrate(codec, bitrate, channels) {
+  const range = bitrateRange(codec, channels);
+  return Math.min(range.max, Math.max(range.min, bitrate));
+}
+
+function audioBitrateArgs(codec, audio, index, channels) {
+  const bitrate = clampBitrate(codec, Math.max(32, Number(audio.bitrate) || 192), channels);
   if (codec === 'mp3' && Number(audio.vbr) > 0) return [`-q:a:${index}`, String(Math.min(9, Number(audio.vbr) - 1))];
   if (codec === 'ac3') {
     const snapped = AC3_BITRATES.reduce((best, value) => (Math.abs(value - bitrate) < Math.abs(best - bitrate) ? value : best));
@@ -255,10 +263,9 @@ function videoArgs(plan, preset, container, pass, passLogFile) {
   return args;
 }
 
-function audioTrackPlan(track, preset, media, loudness) {
-  const audio = preset.audio;
+function audioTrackPlan(track, audio, media, loudness) {
   const codecInfo = AUDIO_CODECS[audio.codec] || AUDIO_CODECS.aac;
-  const encoder = audio.codec === 'pcm' ? pcmEncoder(track) : codecInfo.encoder;
+  const encoder = codecInfo.encoder;
   const sampleRate = targetSampleRate(track, audio, codecInfo);
   const channels = targetChannels(track, audio, codecInfo);
   const measured = loudness && Object.hasOwn(loudness, track.index) ? loudness[track.index] : null;
@@ -287,7 +294,8 @@ function audioTrackPlan(track, preset, media, loudness) {
     chain,
     loudness: target,
     measured: Boolean(measured && !silent),
-    needsScan: wantsLoudness && !measured
+    needsScan: wantsLoudness && !measured,
+    settings: audio
   };
 }
 
@@ -300,7 +308,7 @@ function audioArgs(plans, preset) {
     }
     if (plan.chain.length) args.push(`-filter:a:${index}`, plan.chain.join(','));
     args.push(`-c:a:${index}`, plan.encoder);
-    args.push(...audioBitrateArgs(plan.codec, preset.audio, index));
+    args.push(...audioBitrateArgs(plan.codec, plan.settings, index, plan.channels));
     args.push(`-ar:a:${index}`, String(plan.sampleRate));
     if (plan.forceChannels) args.push(`-ac:a:${index}`, String(plan.channels));
   });
@@ -312,7 +320,7 @@ function pcmBytesPerSecond(plan) {
     const { track } = plan;
     return (track.sampleRate || 48000) * (track.channels || 2) * Math.ceil((track.bitDepth || 16) / 8);
   }
-  return plan.sampleRate * plan.channels * (plan.encoder === 'pcm_s24le' ? 3 : 2);
+  return plan.sampleRate * plan.channels * 2;
 }
 
 function needsRf64(audioPlans, duration) {
@@ -365,10 +373,7 @@ function buildPlan({ media, preset, encoder = null, outputPath, format = null, t
   const videoMode = wantVideo ? preset.video.mode : 'none';
   if (videoMode === 'copy' && !canCopyVideo(container, media.video)) return fail('video-copy-incompatible', media.video.codec);
   const audioMode = preset.audio.mode;
-  if (audioMode === 'copy') {
-    const blocked = audioTracks.find((track) => !canCopyAudio(container, track));
-    if (blocked) return fail('audio-copy-incompatible', blocked.codec);
-  }
+  const reencodeAudio = { ...preset.audio, mode: 'encode', loudness: 'off', volumeDb: 0 };
   const twoPass = videoMode === 'encode' && preset.video.rateControl === 'bitrate' && Boolean(preset.video.twoPass);
   let video = null;
   if (videoMode === 'encode') {
@@ -384,9 +389,12 @@ function buildPlan({ media, preset, encoder = null, outputPath, format = null, t
     if (pictureChanges(preset.picture)) warnings.push('copy-ignores-picture');
   }
 
-  const audioPlans = audioTracks.map((track) =>
-    audioMode === 'copy' ? { track, copy: true, codec: track.codec, needsScan: false } : audioTrackPlan(track, preset, media, loudness)
-  );
+  const audioPlans = audioTracks.map((track) => {
+    if (audioMode !== 'copy') return audioTrackPlan(track, preset.audio, media, loudness);
+    if (canCopyAudio(container, track)) return { track, copy: true, codec: track.codec, needsScan: false };
+    warnings.push('audio-reencoded');
+    return { ...audioTrackPlan(track, reencodeAudio, media, null), reencoded: true };
+  });
 
   const subtitles = [];
   if (wantVideo && preset.subtitles === 'keep') {
@@ -447,7 +455,7 @@ function buildPlan({ media, preset, encoder = null, outputPath, format = null, t
     extension: outputExtension(preset),
     muxer: format || spec.muxer,
     video: summarizeVideo(videoMode, video, media, preset),
-    audio: audioPlans.map((plan) => summarizeAudio(plan, preset)),
+    audio: audioPlans.map(summarizeAudio),
     subtitles: subtitles.map((item) => ({ index: item.track.index, codec: item.codec }))
   };
   const expect = {
@@ -501,7 +509,7 @@ function summarizeVideo(mode, plan, media, preset) {
   };
 }
 
-function summarizeAudio(plan, preset) {
+function summarizeAudio(plan) {
   if (plan.copy) return { index: plan.track.index, mode: 'copy', codec: plan.track.codec, codecLabel: plan.track.codecLabel };
   return {
     index: plan.track.index,
@@ -509,12 +517,13 @@ function summarizeAudio(plan, preset) {
     codec: plan.codec,
     codecLabel: AUDIO_CODECS[plan.codec].label,
     encoder: plan.encoder,
-    bitrate: ['pcm', 'flac'].includes(plan.codec) ? null : Number(preset.audio.bitrate) || null,
-    vbr: plan.codec === 'mp3' && Number(preset.audio.vbr) > 0 ? Number(preset.audio.vbr) - 1 : null,
+    bitrate: ['pcm', 'flac'].includes(plan.codec) ? null : clampBitrate(plan.codec, Math.max(32, Number(plan.settings.bitrate) || 192), plan.channels),
+    vbr: plan.codec === 'mp3' && Number(plan.settings.vbr) > 0 ? Number(plan.settings.vbr) - 1 : null,
     sampleRate: plan.sampleRate,
     channels: plan.channels,
     loudness: plan.loudness,
-    twoPassLoudness: plan.measured
+    twoPassLoudness: plan.measured,
+    reencoded: Boolean(plan.reencoded)
   };
 }
 
@@ -632,7 +641,7 @@ function estimateVideoBits(plan, preset, media) {
 
 function estimateAudioBits(item, track) {
   if (item.mode === 'copy') return track.bitrate || 192000;
-  if (item.codec === 'pcm') return item.sampleRate * item.channels * (item.encoder === 'pcm_s24le' ? 24 : 16);
+  if (item.codec === 'pcm') return item.sampleRate * item.channels * 16;
   if (item.codec === 'flac') return item.sampleRate * item.channels * 16 * 0.55;
   if (item.vbr !== null && item.vbr !== undefined) return (LAME_VBR_KBPS[item.vbr] || 190) * 1000;
   return (item.bitrate || 192) * 1000;
