@@ -16,9 +16,9 @@ export function isFinished(job) {
 
 function applyList(jobs) {
   queueStore.set((state) => {
-    const ids = new Set(jobs.map((job) => job.id));
+    const running = new Set(jobs.filter((job) => job.state === 'running').map((job) => job.id));
     const progress = {};
-    for (const [id, value] of Object.entries(state.progress)) if (ids.has(id)) progress[id] = value;
+    for (const [id, value] of Object.entries(state.progress)) if (running.has(id)) progress[id] = value;
     return { jobs, progress, loaded: true };
   });
 }

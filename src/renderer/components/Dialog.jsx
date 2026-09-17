@@ -51,7 +51,7 @@ export function Dialog({ open, title, text, children, actions = [], onCancel, st
     return () => {
       document.removeEventListener('keydown', onKeyDown, true);
       setModalOpen(false);
-      if (previous && typeof previous.focus === 'function' && previous.isConnected) previous.focus();
+      if (previous && typeof previous.focus === 'function' && previous.isConnected) previous.focus({ preventScroll: true });
     };
   }, [open]);
 
