@@ -1,0 +1,103 @@
+{
+  "name": "vidaro",
+  "productName": "Vidaro",
+  "version": "0.1.0",
+  "description": "Download and convert video on Windows, in one clean app.",
+  "author": "TridentSky",
+  "license": "MIT",
+  "private": true,
+  "homepage": "https://github.com/TridentSky/Vidaro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TridentSky/Vidaro.git"
+  },
+  "main": "src/main/main.js",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "node build/dev.js",
+    "test": "node --test \"test/**/*.test.js\"",
+    "fetch-binaries": "node build/fetch-binaries.js",
+    "build:renderer": "vite build",
+    "dist": "node build/build.js"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "6.1.1",
+    "electron": "44.4.1",
+    "electron-builder": "26.15.3",
+    "lucide-react": "1.46.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "vite": "8.3.0"
+  },
+  "build": {
+    "appId": "com.tridentsky.vidaro",
+    "productName": "Vidaro",
+    "artifactName": "Vidaro-Setup.${ext}",
+    "copyright": "Copyright © 2026 TridentSky",
+    "directories": {
+      "buildResources": "build",
+      "output": ".build/electron"
+    },
+    "files": [
+      "src/main/**",
+      "src/preload/**",
+      "dist/**",
+      "package.json"
+    ],
+    "extraResources": [
+      { "from": "bin/yt-dlp.exe", "to": "bin/yt-dlp.exe" },
+      { "from": "bin/ffmpeg.exe", "to": "bin/ffmpeg.exe" },
+      { "from": "bin/ffprobe.exe", "to": "bin/ffprobe.exe" },
+      { "from": "bin/manifest.json", "to": "bin/manifest.json" },
+      { "from": "bin/licenses", "to": "bin/licenses" },
+      { "from": "build/icon.ico", "to": "icon.ico" }
+    ],
+    "asar": true,
+    "npmRebuild": false,
+    "electronLanguages": [
+      "en-US",
+      "es",
+      "es-419"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "executableName": "Vidaro",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Vidaro",
+      "uninstallDisplayName": "Vidaro",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "installerSidebar": "build/installerSidebar.bmp",
+      "uninstallerSidebar": "build/installerSidebar.bmp",
+      "installerHeader": "build/installerHeader.bmp",
+      "include": "build/installer.nsh",
+      "deleteAppDataOnUninstall": true,
+      "differentialPackage": false,
+      "runAfterFinish": true,
+      "installerLanguages": [
+        "en_US",
+        "es_ES"
+      ],
+      "displayLanguageSelector": false
+    }
+  }
+}
